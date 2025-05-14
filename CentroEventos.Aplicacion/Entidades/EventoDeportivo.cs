@@ -27,7 +27,8 @@ public class EventoDeportivo
     public double DuracionHoras { get; set; }
 
     public int CupoMaximo 
-    {   get=>_cupoMaximo;
+    {   
+        get=>_cupoMaximo;
         set=> _cupoMaximo= value; 
     }
 
