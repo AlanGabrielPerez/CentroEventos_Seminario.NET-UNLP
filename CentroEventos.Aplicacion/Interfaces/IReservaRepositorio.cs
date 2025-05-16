@@ -1,30 +1,29 @@
-namespace CentroEventos.Aplicacion.Interfaces
+using CentroEventos.Aplicacion.Entidades;
+
+namespace CentroEventos.Aplicacion.Interfaces;
+
+public interface IReservaRepositorio
 {
-    using CentroEventos.Aplicacion.Entidades;
+    void Crear(Reserva reserva);
 
-    public interface IReservaRepositorio
-    {
-        void Crear(Reserva reserva);
+    void Modificar(Reserva reserva);
 
-        void Modificar(Reserva reserva);
+    void Eliminar(int id);
 
-        void Eliminar(int id);
+    Reserva? ObtenerPorId(int id);
 
-        Reserva? ObtenerPorId(int id);
+    List<Reserva> ObtenerTodas();
 
-        List<Reserva> ObtenerTodas();
+    List<Reserva> ObtenerPorPersonaId(int personaId);
 
-        List<Reserva> ObtenerPorPersonaId(int personaId);
+    List<Reserva> ObtenerPorEventoId(int eventoId);
 
-        List<Reserva> ObtenerPorEventoId(int eventoId);
+    bool ExisteReserva(int personaId, int eventoId);
 
-        bool ExisteReserva(int personaId, int eventoId);
+    bool TieneReservasAsociadas(int personaId);
 
-        bool TieneReservasAsociadas(int personaId);
+    bool EventoTieneReservas(int eventoId);
 
-        bool EventoTieneReservas(int eventoId);
+    int ContarReservasDeEvento(int eventoId);
 
-        int ContarReservasDeEvento(int eventoId);
-        
-    }
 }

@@ -1,6 +1,7 @@
-namespace CentroEventos.Aplicacion.Repositorios;
-
 using CentroEventos.Aplicacion.Entidades;
+
+
+namespace CentroEventos.Aplicacion.Interfaces;
 
 public interface IPersonaRepositorio
 {
@@ -18,9 +19,9 @@ public interface IPersonaRepositorio
 
     void Eliminar(int id);
 
-    bool ExisteDni(string dni);
+    bool ExisteDni(string? dni);
 
-    bool ExisteEmail(string email);
+    bool ExisteEmail(string? email);
 
     bool TieneReservas(int personaId);
 

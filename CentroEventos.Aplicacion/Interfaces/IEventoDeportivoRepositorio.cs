@@ -1,6 +1,6 @@
-namespace CentroEventos.Aplicacion.Interfaces;
-
 using CentroEventos.Aplicacion.Entidades;
+
+namespace CentroEventos.Aplicacion.Interfaces;
 
 public interface IEventoDeportivoRepositorio
 {
@@ -17,5 +17,5 @@ public interface IEventoDeportivoRepositorio
     bool TieneReservasAsociadas(int eventoId);
 
     bool EsResponsableDeEventos(int personaId);
-    
+
 }
