@@ -40,5 +40,9 @@ public class Persona
         set => _telefono = value;
     }
 
+    public override string ToString()
+{
+    return $"{Id}; {DNI}; {Nombre}, {Apellido}; {Email}; {Telefono}";
+}
 
 }
