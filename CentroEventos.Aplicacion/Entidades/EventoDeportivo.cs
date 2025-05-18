@@ -26,11 +26,16 @@ public class EventoDeportivo
 
     public double DuracionHoras { get; set; }
 
-    public int CupoMaximo 
-    {   
-        get=>_cupoMaximo;
-        set=> _cupoMaximo= value; 
+    public int CupoMaximo
+    {
+        get => _cupoMaximo;
+        set => _cupoMaximo = value;
     }
 
     public int ResponsableId { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Id}; {Nombre}; {Descripcion}; {FechaHoraInicio}; {DuracionHoras}; {CupoMaximo};{ResponsableId}";
+    }
 }

@@ -5,6 +5,15 @@ namespace CentroEventos.Repositorios;
 
 public class RepositorioReserva : IReservaRepositorio
 {
+    readonly string _rutaArchivo;
+    public RepositorioReserva()
+    {
+        string _carpetaArchivos = Path.Combine(Environment.CurrentDirectory,
+                "..", "..", "..", "..",
+                "CentroEventos.Repositorios", "Archivos");
+
+        _rutaArchivo = Path.Combine(_carpetaArchivos, "reserva.txt");
+    }
     public int ContarReservasDeEvento(int eventoId)
     {
         throw new NotImplementedException();
@@ -12,7 +21,8 @@ public class RepositorioReserva : IReservaRepositorio
 
     public void Crear(Reserva reserva)
     {
-        throw new NotImplementedException();
+        using var sw = new StreamWriter(_rutaArchivo,true);
+        sw.WriteLine(reserva.ToString());
     }
 
     public void Eliminar(int id)

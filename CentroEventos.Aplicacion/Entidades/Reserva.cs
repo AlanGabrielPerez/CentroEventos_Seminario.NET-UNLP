@@ -18,4 +18,10 @@ public class Reserva
     public DateTime FechaAltaReserva { get; set; }
 
     public EstadoAsistencia EstadoAsistencia { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Id}; {PersonaId}; {EventoDeportivoId}; {FechaAltaReserva}; {EstadoAsistencia}";
+    }
+
 }

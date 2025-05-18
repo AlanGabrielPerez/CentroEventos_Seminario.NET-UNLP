@@ -5,7 +5,7 @@ namespace CentroEventos.Aplicacion.Interfaces;
 
 public interface IPersonaRepositorio
 {
-    Persona ObtenerPorId(int id);
+    Persona? ObtenerPorId(int id);
 
     Persona ObtenerPorDni(string dni);
 

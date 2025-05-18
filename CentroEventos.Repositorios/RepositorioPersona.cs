@@ -54,9 +54,33 @@ public class RepositorioPersona : IPersonaRepositorio
         throw new NotImplementedException();
     }
 
-    public Persona ObtenerPorId(int id)
+    public Persona? ObtenerPorId(int id)
     {
-        throw new NotImplementedException();
+
+        using var sr = new StreamReader(_rutaArchivo);
+
+        while (!sr.EndOfStream)
+        {
+            var linea = sr.ReadLine();
+            if (linea == null) continue;
+
+            var datos = linea.Split(';');
+
+            if (int.TryParse(datos[0], out int personaId) && personaId == id)
+            {
+                return new Persona
+                {
+                    Id = personaId,
+                    DNI = datos[1],
+                    Nombre = datos[2],
+                    Apellido = datos[3],
+                    Email = datos[4],
+                    Telefono = datos[5]
+                };
+            }
+        }
+
+        return null;
     }
 
     public List<Persona> ObtenerTodas()
