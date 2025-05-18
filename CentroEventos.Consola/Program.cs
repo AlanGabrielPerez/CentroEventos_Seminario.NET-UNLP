@@ -13,15 +13,32 @@ var persona = new Persona
     Email = "alanPerez@mail.com",
     Telefono = "221222920"
 };
+var evento = new EventoDeportivo
+{
+    Id = 1,
+    Nombre = "Yoga",
+    Descripcion = "Clase de yoga funcional",
+    FechaHoraInicio =new DateTime(2025, 6, 1, 15, 30, 00),
+    DuracionHoras = 5,
+    CupoMaximo= 30,
+    ResponsableId = 1, 
+};
+
 
 var personaRepo = new RepositorioPersona();
-var validador = new PersonaValidador();
-var useCase = new CrearPersonaUseCase();
+var validadorPersona = new PersonaValidador();
+var useCasePersona = new CrearPersonaUseCase();
+var eventoRepo = new RepositorioEventoDeportivo();
+var validadorEvento = new EventoDeportivoValidador();
+var useCaseEvento = new CrearEventoDeportivoUseCase();
+
 
 try
 {
-    useCase.Ejecutar(persona, personaRepo, validador);
+    useCasePersona.Ejecutar(persona, personaRepo, validadorPersona);
     Console.WriteLine("Persona creada con éxito.");
+    useCaseEvento.Ejecutar(evento, eventoRepo, personaRepo, validadorEvento);
+    Console.WriteLine("Evento creado");
 }
 catch (Exception ex)
 {

@@ -5,6 +5,16 @@ namespace CentroEventos.Repositorios;
 
 public class RepositorioEventoDeportivo : IEventoDeportivoRepositorio
 {
+
+    readonly string _rutaArchivo;
+    public RepositorioEventoDeportivo()
+    {
+        string _carpetaArchivos = Path.Combine(Environment.CurrentDirectory,
+                "..", "..", "..", "..",
+                "CentroEventos.Repositorios", "Archivos");
+
+        _rutaArchivo = Path.Combine(_carpetaArchivos, "eventoDeportivo.txt");
+    }
     public void Actualizar(EventoDeportivo evento)
     {
         throw new NotImplementedException();
@@ -12,7 +22,8 @@ public class RepositorioEventoDeportivo : IEventoDeportivoRepositorio
 
     public void Agregar(EventoDeportivo evento)
     {
-        throw new NotImplementedException();
+        using var sw = new StreamWriter(_rutaArchivo,true);
+        sw.WriteLine(evento.ToString());
     }
 
     public void Eliminar(int id)
@@ -22,7 +33,7 @@ public class RepositorioEventoDeportivo : IEventoDeportivoRepositorio
 
     public bool EsResponsableDeEventos(int personaId)
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public EventoDeportivo? ObtenerPorId(int id)
@@ -37,6 +48,6 @@ public class RepositorioEventoDeportivo : IEventoDeportivoRepositorio
 
     public bool TieneReservasAsociadas(int eventoId)
     {
-        throw new NotImplementedException();
+        return false;
     }
 }
