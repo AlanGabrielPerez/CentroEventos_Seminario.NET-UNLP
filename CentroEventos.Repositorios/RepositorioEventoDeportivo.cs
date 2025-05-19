@@ -22,6 +22,8 @@ public class RepositorioEventoDeportivo : IEventoDeportivoRepositorio
 
     public void Agregar(EventoDeportivo evento)
     {
+        var repoID = new RepositorioIDs("eventoDeportivo");
+        evento.Id = repoID.ObtenerSiguienteId();
         using var sw = new StreamWriter(_rutaArchivo,true);
         sw.WriteLine(evento.ToString());
     }
