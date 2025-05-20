@@ -4,6 +4,7 @@ using CentroEventos.Aplicacion.Entidades;
 namespace CentroEventos.Repositorios;
 
 public class RepositorioPersona : IPersonaRepositorio
+
 {
 
     readonly string _rutaArchivo;
@@ -19,7 +20,16 @@ public class RepositorioPersona : IPersonaRepositorio
 
     public void Actualizar(Persona persona)
     {
-        throw new NotImplementedException();
+        var listaPersonas = ObtenerTodas(); 
+        int indice = listaPersonas.FindIndex(p => p.Id == persona.Id);
+        if (indice == -1)
+            throw new Exception($"No se encontro una persona con ID {persona.Id}.");
+
+        listaPersonas[indice] = persona;
+
+        using var sw = new StreamWriter(_rutaArchivo, false);
+        foreach (var p in listaPersonas)
+            sw.WriteLine(p.ToString());
     }
 
     public void Crear(Persona persona)
@@ -31,30 +41,98 @@ public class RepositorioPersona : IPersonaRepositorio
         sw.WriteLine(persona.ToString());
     }
 
-
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
+        var ListaPersonas = ObtenerTodas();
+        ListaPersonas.RemoveAll(p => p.Id == id);
+
+        using var sw = new StreamWriter(_rutaArchivo, false);
+        foreach (var persona in ListaPersonas)
+            sw.WriteLine(persona.ToString());
     }
 
     public bool ExisteDni(string? dni)
     {
+        if (string.IsNullOrWhiteSpace(dni)) return false;
+
+        using var sr = new StreamReader(_rutaArchivo);
+
+        while (!sr.EndOfStream)
+        {
+            var linea = sr.ReadLine();
+            if (linea == null) continue;
+            var datos = linea.Split(';');
+            if (datos.Length > 1 && datos[1] == dni) return true;
+        }
         return false;
     }
 
     public bool ExisteEmail(string? email)
     {
+        if (string.IsNullOrWhiteSpace(email)) return false;
+
+        using var sr = new StreamReader(_rutaArchivo);
+
+        while (!sr.EndOfStream)
+        {
+            var linea = sr.ReadLine();
+            if (linea == null) continue;
+            var datos = linea.Split(';');
+            if (datos.Length > 4 && datos[4] == email) return true;
+        }
         return false;
     }
 
-    public Persona ObtenerPorDni(string dni)
+    public Persona? ObtenerPorDni(string dni)
     {
-        throw new NotImplementedException();
+        using var sr = new StreamReader(_rutaArchivo);
+
+        while (!sr.EndOfStream)
+        {
+            var linea = sr.ReadLine();
+            if (string.IsNullOrWhiteSpace(linea)) continue;
+
+            var datos = linea.Split(';');
+            if (datos.Length >= 6 && datos[1] == dni)
+            {
+                return new Persona
+                {
+                    Id = int.Parse(datos[0]),
+                    DNI = datos[1],
+                    Nombre = datos[2],
+                    Apellido = datos[3],
+                    Email = datos[4],
+                    Telefono = datos[5]
+                };
+            }
+        }
+        return null;
     }
 
-    public Persona ObtenerPorEmail(string email)
+    public Persona? ObtenerPorEmail(string email)
     {
-        throw new NotImplementedException();
+        using var sr = new StreamReader(_rutaArchivo);
+
+        while (!sr.EndOfStream)
+        {  
+            var linea = sr.ReadLine();
+            if (string.IsNullOrWhiteSpace(linea)) continue;
+            
+            var datos = linea.Split(';');
+            if (datos.Length >= 6 && datos[4] == email)
+            {
+                return new Persona
+                {
+                    Id = int.Parse(datos[0]),
+                    DNI = datos[1],
+                    Nombre = datos[2],
+                    Apellido = datos[3],
+                    Email = datos[4],
+                    Telefono = datos[5]
+                };
+            }
+        }
+        return null;
     }
 
     public Persona? ObtenerPorId(int id)
@@ -66,9 +144,8 @@ public class RepositorioPersona : IPersonaRepositorio
         {
             var linea = sr.ReadLine();
             if (linea == null) continue;
-
+            
             var datos = linea.Split(';');
-
             if (int.TryParse(datos[0], out int personaId) && personaId == id)
             {
                 return new Persona
@@ -88,11 +165,30 @@ public class RepositorioPersona : IPersonaRepositorio
 
     public List<Persona> ObtenerTodas()
     {
-        throw new NotImplementedException();
+        var listaPersonas = new List<Persona>();
+        using var sr = new StreamReader(_rutaArchivo);
+
+    while (!sr.EndOfStream)
+    {
+        var linea = sr.ReadLine();
+        if (string.IsNullOrWhiteSpace(linea)) continue;
+
+        var datos = linea.Split(';');
+        if (datos.Length >= 6)
+        {
+            var persona = new Persona
+            {
+                Id = int.Parse(datos[0]),
+                DNI = datos[1],
+                Nombre = datos[2],
+                Apellido = datos[3],
+                Email = datos[4],
+                Telefono = datos[5]
+            };
+            listaPersonas.Add(persona);
+        }
+    }
+        return listaPersonas;
     }
 
-    public bool TieneReservas(int personaId)
-    {
-        throw new NotImplementedException();
-    }
 }

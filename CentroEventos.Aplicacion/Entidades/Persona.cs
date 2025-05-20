@@ -42,7 +42,7 @@ public class Persona
 
     public override string ToString()
 {
-    return $"{Id}; {DNI}; {Nombre}; {Apellido}; {Email}; {Telefono}";
+    return $"{Id};{DNI};{Nombre};{Apellido};{Email};{Telefono}";
 }
 
 }
