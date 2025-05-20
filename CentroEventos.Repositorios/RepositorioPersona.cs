@@ -34,7 +34,7 @@ public class RepositorioPersona : IPersonaRepositorio
 
     public void Crear(Persona persona)
     {
-        var repoID = new RepositorioIDs("persona");
+        var repoID = new RepositorioGestorIDs("persona");
         persona.Id = repoID.ObtenerSiguienteId();
         using var sw = new StreamWriter(_rutaArchivo,true);
                 

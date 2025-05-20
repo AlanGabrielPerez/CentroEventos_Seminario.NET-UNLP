@@ -1,10 +1,10 @@
 namespace CentroEventos.Repositorios;
 
-public class RepositorioIDs{
+public class RepositorioGestorIDs{
 
     readonly string _rutaArchivo;
 
-    public RepositorioIDs(string entidad)
+    public RepositorioGestorIDs(string entidad)
     {
         string _carpetaArchivos = Path.Combine(Environment.CurrentDirectory,
                 "..", "..", "..", "..",
