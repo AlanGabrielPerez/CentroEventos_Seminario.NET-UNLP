@@ -36,6 +36,6 @@ public class EventoDeportivo
 
     public override string ToString()
     {
-        return $"{Id};{Nombre};{Descripcion};{FechaHoraInicio};{DuracionHoras};{CupoMaximo};{ResponsableId}";
+        return $"{Id};{Nombre};{Descripcion};{FechaHoraInicio:yyyy-MM-ddTHH:mm:ss};{DuracionHoras};{CupoMaximo};{ResponsableId}";
     }
 }

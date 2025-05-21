@@ -13,9 +13,6 @@ public interface IEventoDeportivoRepositorio
     void Actualizar(EventoDeportivo evento);
 
     void Eliminar(int id);
-
-    bool TieneReservasAsociadas(int eventoId);
-
     bool EsResponsableDeEventos(int personaId);
 
 }
