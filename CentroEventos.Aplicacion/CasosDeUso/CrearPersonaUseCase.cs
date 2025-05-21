@@ -15,6 +15,9 @@ public class CrearPersonaUseCase
         if (!validador.Validar(persona, personaRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
+         if (!validador.ValidarDuplicados(persona, personaRepo, out string mensajeError))
+            throw new DuplicadoException(mensajeError);
+
         personaRepo.Crear(persona);
     }
 }

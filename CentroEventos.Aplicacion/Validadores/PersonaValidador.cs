@@ -24,6 +24,16 @@ public class PersonaValidador
         if (string.IsNullOrWhiteSpace(persona.Email))
             mensajeError += "El email no puede estar vacío.\n";
 
+        return string.IsNullOrEmpty(mensajeError);
+    }
+
+    public bool ValidarDuplicados(
+        Persona persona,
+        IPersonaRepositorio personaRepo,
+        out string mensajeError)
+    {
+        mensajeError = "";
+
         if (personaRepo.ExisteDni(persona.DNI))
             mensajeError += $"Ya existe una persona con el DNI {persona.DNI}.\n";
 
@@ -32,4 +42,5 @@ public class PersonaValidador
 
         return string.IsNullOrEmpty(mensajeError);
     }
+    
 }
