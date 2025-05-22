@@ -9,14 +9,18 @@ public class CrearReservaUseCase
 {
     public void Ejecutar(
         Reserva reserva,
+        IReservaRepositorio reservaRepo,
         IPersonaRepositorio personaRepo,
         IEventoDeportivoRepositorio eventoRepo,
-        IReservaRepositorio reservaRepo,
         ReservaValidador validador)
     {
-        if (!validador.Validar(reserva, personaRepo, eventoRepo, reservaRepo, out string errores))
-            throw new ValidacionException(errores);
+        if (!validador.Validar(reserva, personaRepo, eventoRepo, reservaRepo, out string mensajeError))
+            throw new ValidacionException(mensajeError);
+
+        reserva.FechaAltaReserva = DateTime.Now;
+        reserva.EstadoAsistencia = EstadoAsistencia.Pendiente;
 
         reservaRepo.Crear(reserva);
     }
+
 }
