@@ -6,12 +6,19 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ModificarReservaUseCase
 {
-    public void Ejecutar(Reserva reserva, IReservaRepositorio reservaRepo)
+    private readonly IReservaRepositorio _reservaRepo;
+
+    public ModificarReservaUseCase(IReservaRepositorio reservaRepo)
     {
-        var reservaExistente = reservaRepo.ObtenerPorId(reserva.Id);
+        _reservaRepo = reservaRepo;
+    }
+
+    public void Ejecutar(Reserva reserva)
+    {
+        var reservaExistente = _reservaRepo.ObtenerPorId(reserva.Id);
         if (reservaExistente == null)
             throw new EntidadNotFoundException($"No se encontró la reserva con ID {reserva.Id}.");
 
-        reservaRepo.Modificar(reserva);
+        _reservaRepo.Modificar(reserva);
     }
 }

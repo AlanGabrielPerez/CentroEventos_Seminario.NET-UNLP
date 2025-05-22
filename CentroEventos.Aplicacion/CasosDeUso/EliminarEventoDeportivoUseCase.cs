@@ -5,18 +5,26 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class EliminarEventoDeportivoUseCase
 {
-    public void Ejecutar(
-        int id,
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+    private readonly IReservaRepositorio _reservaRepo;
+
+    public EliminarEventoDeportivoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
         IReservaRepositorio reservaRepo)
     {
-        var evento = eventoRepo.ObtenerPorId(id);
+        _eventoRepo = eventoRepo;
+        _reservaRepo = reservaRepo;
+    }
+
+    public void Ejecutar(int id)
+    {
+        var evento = _eventoRepo.ObtenerPorId(id);
         if (evento == null)
             throw new EntidadNotFoundException($"No se encontró un evento con ID {id}.");
 
-        if (reservaRepo.EventoTieneReservas(id))
+        if (_reservaRepo.EventoTieneReservas(id))
             throw new OperacionInvalidaException("No se puede eliminar un evento con reservas asociadas.");
 
-        eventoRepo.Eliminar(id);
+        _eventoRepo.Eliminar(id);
     }
 }

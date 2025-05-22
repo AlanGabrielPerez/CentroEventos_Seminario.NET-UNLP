@@ -5,8 +5,15 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ListarReservasUseCase
 {
-    public List<Reserva> Ejecutar(IReservaRepositorio reservaRepo)
+    private readonly IReservaRepositorio _reservaRepo;
+
+    public ListarReservasUseCase(IReservaRepositorio reservaRepo)
     {
-        return reservaRepo.ObtenerTodas();
+        _reservaRepo = reservaRepo;
+    }
+
+    public List<Reserva> Ejecutar()
+    {
+        return _reservaRepo.ObtenerTodas();
     }
 }

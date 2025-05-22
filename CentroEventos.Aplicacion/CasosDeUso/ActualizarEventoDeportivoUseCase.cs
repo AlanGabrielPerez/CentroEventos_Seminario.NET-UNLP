@@ -7,22 +7,32 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ActualizarEventoDeportivoUseCase
 {
-    public void Ejecutar(
-        EventoDeportivo evento,
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+    private readonly IPersonaRepositorio _personaRepo;
+    private readonly EventoDeportivoValidador _validador;
+
+    public ActualizarEventoDeportivoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
         IPersonaRepositorio personaRepo,
         EventoDeportivoValidador validador)
     {
-        var eventoExistente = eventoRepo.ObtenerPorId(evento.Id);
+        _eventoRepo = eventoRepo;
+        _personaRepo = personaRepo;
+        _validador = validador;
+    }
+
+    public void Ejecutar(EventoDeportivo evento)
+    {
+        var eventoExistente = _eventoRepo.ObtenerPorId(evento.Id);
         if (eventoExistente == null)
             throw new EntidadNotFoundException($"No se encontró un evento con ID {evento.Id}.");
 
         if (eventoExistente.FechaHoraInicio < DateTime.Now)
             throw new OperacionInvalidaException("No se puede modificar un evento pasado.");
 
-        if (!validador.Validar(evento, personaRepo, out string mensajeError))
+        if (!_validador.Validar(evento, _personaRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
-        eventoRepo.Actualizar(evento);
+        _eventoRepo.Actualizar(evento);
     }
 }

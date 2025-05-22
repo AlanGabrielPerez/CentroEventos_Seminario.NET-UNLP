@@ -6,19 +6,27 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ListarAsistenciaAEventoUseCase
 {
-    public List<Reserva> Ejecutar(
-        int eventoId,
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+    private readonly IReservaRepositorio _reservaRepo;
+
+    public ListarAsistenciaAEventoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
         IReservaRepositorio reservaRepo)
     {
-        var evento = eventoRepo.ObtenerPorId(eventoId);
+        _eventoRepo = eventoRepo;
+        _reservaRepo = reservaRepo;
+    }
+
+    public List<Reserva> Ejecutar(int eventoId)
+    {
+        var evento = _eventoRepo.ObtenerPorId(eventoId);
         if (evento == null)
             throw new EntidadNotFoundException($"No existe el evento con ID {eventoId}.");
         
         if (evento.FechaHoraInicio > DateTime.Now)
             throw new OperacionInvalidaException("Este evento aun no ocurrio.");
 
-        var reservas = reservaRepo.ObtenerPorEventoId(eventoId);
+        var reservas = _reservaRepo.ObtenerPorEventoId(eventoId);
         return reservas.Where(r => r.EstadoAsistencia == EstadoAsistencia.Presente).ToList();
     }
 }

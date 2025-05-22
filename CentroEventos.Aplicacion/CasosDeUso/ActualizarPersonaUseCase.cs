@@ -7,27 +7,20 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ActualizarPersonaUseCase
 {
-    public void Ejecutar(
-        Persona persona,
-        IPersonaRepositorio personaRepo,
-        PersonaValidador validador)
+    private readonly IPersonaRepositorio _personaRepo;
+    private readonly PersonaValidador _validador;
+
+    public ActualizarPersonaUseCase(IPersonaRepositorio personaRepo, PersonaValidador validador)
     {
-        var personaExistente = personaRepo.ObtenerPorId(persona.Id);
+        _personaRepo = personaRepo;
+        _validador = validador;
+    }
 
-        if (personaExistente == null)
-            throw new EntidadNotFoundException($"No se encontró una persona con ID {persona.Id}.");
-
-        if (!validador.Validar(persona, personaRepo, out string mensajeError))
+    public void Ejecutar(Persona persona)
+    {
+        if (!_validador.Validar(persona, _personaRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
-        bool cambioDNI = persona.DNI != personaExistente.DNI;
-        bool cambioEmail = persona.Email != personaExistente.Email;
-
-        if ((cambioDNI || cambioEmail) && !validador.ValidarDuplicados(persona, personaRepo, out mensajeError))
-        {
-            throw new DuplicadoException(mensajeError);
-        }
-
-        personaRepo.Actualizar(persona);
+        _personaRepo.Actualizar(persona);
     }
 }

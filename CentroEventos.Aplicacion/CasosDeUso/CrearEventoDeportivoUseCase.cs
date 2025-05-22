@@ -7,15 +7,25 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class CrearEventoDeportivoUseCase
 {
-    public void Ejecutar(
-        EventoDeportivo evento,
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+    private readonly IPersonaRepositorio _personaRepo;
+    private readonly EventoDeportivoValidador _validador;
+
+    public CrearEventoDeportivoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
         IPersonaRepositorio personaRepo,
         EventoDeportivoValidador validador)
     {
-        if (!validador.Validar(evento, personaRepo, out string mensajeError))
+        _eventoRepo = eventoRepo;
+        _personaRepo = personaRepo;
+        _validador = validador;
+    }
+
+    public void Ejecutar(EventoDeportivo evento)
+    {
+        if (!_validador.Validar(evento, _personaRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
-        eventoRepo.Agregar(evento);
+        _eventoRepo.Agregar(evento);
     }
 }

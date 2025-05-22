@@ -5,22 +5,32 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class EliminarPersonaUseCase
 {
-    public void Ejecutar(
-        int id,
+    private readonly IPersonaRepositorio _personaRepo;
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+    private readonly IReservaRepositorio _reservaRepo;
+
+    public EliminarPersonaUseCase(
         IPersonaRepositorio personaRepo,
-        IReservaRepositorio reservaRepo,
-        IEventoDeportivoRepositorio eventoRepo)
+        IEventoDeportivoRepositorio eventoRepo,
+        IReservaRepositorio reservaRepo)
     {
-        var persona = personaRepo.ObtenerPorId(id);
+        _personaRepo = personaRepo;
+        _eventoRepo = eventoRepo;
+        _reservaRepo = reservaRepo;
+    }
+
+    public void Ejecutar(int id)
+    {
+        var persona = _personaRepo.ObtenerPorId(id);
         if (persona == null)
-            throw new EntidadNotFoundException($"No se encontró la persona con ID {id}.");
+            throw new EntidadNotFoundException($"No se encontró una persona con ID {id}.");
 
-        if (reservaRepo.TieneReservasAsociadas(id))
-            throw new OperacionInvalidaException("No se puede eliminar la persona porque tiene reservas asociadas.");
+        bool tieneEventos = _eventoRepo.EsResponsableDeEventos(id);
+        bool tieneReservas = _reservaRepo.TieneReservasAsociadas(id);
 
-        if (eventoRepo.EsResponsableDeEventos(id))
-            throw new OperacionInvalidaException("No se puede eliminar la persona porque es responsable de uno o más eventos.");
+        if (tieneEventos || tieneReservas)
+            throw new OperacionInvalidaException("No se puede eliminar la persona porque tiene dependencias.");
 
-        personaRepo.Eliminar(id);
+        _personaRepo.Eliminar(id);
     }
 }

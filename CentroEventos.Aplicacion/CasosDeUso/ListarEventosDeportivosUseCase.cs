@@ -5,8 +5,15 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ListarEventosDeportivosUseCase
 {
-    public List<EventoDeportivo> Ejecutar(IEventoDeportivoRepositorio eventoRepo)
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+
+    public ListarEventosDeportivosUseCase(IEventoDeportivoRepositorio eventoRepo)
     {
-        return eventoRepo.ObtenerTodos();
+        _eventoRepo = eventoRepo;
+    }
+
+    public List<EventoDeportivo> Ejecutar()
+    {
+        return _eventoRepo.ObtenerTodos();
     }
 }

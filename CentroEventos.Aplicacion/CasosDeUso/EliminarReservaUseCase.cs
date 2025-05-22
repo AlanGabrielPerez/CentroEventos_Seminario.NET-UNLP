@@ -5,12 +5,19 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class EliminarReservaUseCase
 {
-    public void Ejecutar(int id, IReservaRepositorio reservaRepo)
+    private readonly IReservaRepositorio _reservaRepo;
+
+    public EliminarReservaUseCase(IReservaRepositorio reservaRepo)
     {
-        var reserva = reservaRepo.ObtenerPorId(id);
+        _reservaRepo = reservaRepo;
+    }
+
+    public void Ejecutar(int id)
+    {
+        var reserva = _reservaRepo.ObtenerPorId(id);
         if (reserva == null)
             throw new EntidadNotFoundException($"No se encontró la reserva con ID {id}.");
 
-        reservaRepo.Eliminar(id);
+        _reservaRepo.Eliminar(id);
     }
 }

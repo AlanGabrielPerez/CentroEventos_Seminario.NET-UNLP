@@ -8,36 +8,49 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ReservaAltaUseCase
 {
-    public void Ejecutar(
-        Reserva reserva,
-        int idUsuario,
+    private readonly IServicioAutorizacion _servicioAuth;
+    private readonly IReservaRepositorio _reservaRepo;
+    private readonly IEventoDeportivoRepositorio _eventoRepo;
+    private readonly IPersonaRepositorio _personaRepo;
+    private readonly ReservaValidador _validador;
+
+    public ReservaAltaUseCase(
         IServicioAutorizacion servicioAuth,
         IReservaRepositorio reservaRepo,
         IEventoDeportivoRepositorio eventoRepo,
         IPersonaRepositorio personaRepo,
         ReservaValidador validador)
     {
-        if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.ReservaAlta))
+        _servicioAuth = servicioAuth;
+        _reservaRepo = reservaRepo;
+        _eventoRepo = eventoRepo;
+        _personaRepo = personaRepo;
+        _validador = validador;
+    }
+
+    public void Ejecutar(Reserva reserva, int idUsuario)
+    {
+        if (!_servicioAuth.PoseeElPermiso(idUsuario, Permiso.ReservaAlta))
             throw new FalloAutorizacionException("No tiene permiso para registrar reservas.");
 
-        var persona = personaRepo.ObtenerPorId(reserva.PersonaId);
+        var persona = _personaRepo.ObtenerPorId(reserva.PersonaId);
         if (persona == null)
             throw new EntidadNotFoundException($"no existe la persona con ID {reserva.PersonaId}.");
 
-        var evento = eventoRepo.ObtenerPorId(reserva.EventoDeportivoId);
+        var evento = _eventoRepo.ObtenerPorId(reserva.EventoDeportivoId);
         if (evento == null)
-            throw new EntidadNotFoundException($"no existe el evento con ID {reserva.EventoDeportivoId}.");
+            throw new EntidadNotFoundException($"No existe el evento con ID {reserva.EventoDeportivoId}.");
 
-        int reservasActuales = reservaRepo.ContarReservasDeEvento(evento.Id);
+        int reservasActuales = _reservaRepo.ContarReservasDeEvento(evento.Id);
         if (reservasActuales >= evento.CupoMaximo)
-            throw new CupoExcedidoException("el evento no tiene cupo  disponible.");
+            throw new CupoExcedidoException("El evento no tiene cupo disponible.");
 
-        if (reservaRepo.ExisteReserva(reserva.PersonaId, reserva.EventoDeportivoId))
+        if (_reservaRepo.ExisteReserva(reserva.PersonaId, reserva.EventoDeportivoId))
             throw new DuplicadoException("La persona ya tiene una reserva para este evento");
 
         reserva.FechaAltaReserva = DateTime.Now;
         reserva.EstadoAsistencia = EstadoAsistencia.Pendiente;
 
-        reservaRepo.Crear(reserva);
+        _reservaRepo.Crear(reserva);
     }
 }
