@@ -3,16 +3,22 @@ using CentroEventos.Aplicacion.Validadores;
 using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Excepciones;
 using CentroEventos.Aplicacion.Servicios;
+using CentroEventos.Aplicacion.CasosDeUso;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Consola.Menus;
 
-public static class MenuPersonas
+public class MenuPersonas(int idUsuario,
+    IPersonaRepositorio personaRepo,
+    PersonaValidador validador,
+    IServicioAutorizacion auth)
 {
-    public static void Ejecutar(
-        int idUsuario,
-        IPersonaRepositorio personaRepo,
-        PersonaValidador validador,
-        IServicioAutorizacion auth)
+    private readonly IPersonaRepositorio _personaRepo = personaRepo;
+    private readonly PersonaValidador _validador = validador;
+    private readonly IServicioAutorizacion _auth = auth;
+    private readonly int _idUsuario = idUsuario;
+
+    public void Ejecutar()
     {
         bool volver = false;
         while (!volver)
@@ -24,12 +30,13 @@ public static class MenuPersonas
             Console.WriteLine("0. Volver al menu principal");
             Console.Write("Seleccione una opcion: ");
             string opcion = Console.ReadLine() ?? "";
-           
+
 
             switch (opcion)
             {
                 case "1":
-                    throw new NotImplementedException();
+                    CrearPersona(_idUsuario, _personaRepo, _validador, _auth);
+                    break;
                 case "2":
                     throw new NotImplementedException();
                 case "3":
@@ -45,4 +52,47 @@ public static class MenuPersonas
             }
         }
     }
+
+    public static void CrearPersona(int _idUsuario,
+        IPersonaRepositorio _personaRepo,
+        PersonaValidador _validador,
+        IServicioAutorizacion _auth)
+    {
+        try
+        {
+            if (!_auth.PoseeElPermiso(_idUsuario, Permiso.UsuarioAlta))
+                throw new FalloAutorizacionException("No tiene permiso para crear personas.");
+
+            Console.WriteLine("Ingrese los datos de la persona:");
+            Console.Write("Nombre: ");
+            string nombre = Console.ReadLine() ?? "";
+            Console.Write("Apellido: ");
+            string apellido = Console.ReadLine() ?? "";
+            Console.Write("DNI: ");
+            string dni = Console.ReadLine() ?? "";
+            Console.Write("Email: ");
+            string email = Console.ReadLine() ?? "";
+            Console.Write("Telefono: ");
+            string telefono = Console.ReadLine() ?? "";
+
+            Persona persona = new Persona
+            {
+                Nombre = nombre,
+                Apellido = apellido,
+                DNI = dni,
+                Email = email,
+                Telefono = telefono
+            };
+
+            new CrearPersonaUseCase(_personaRepo, _validador).Ejecutar(persona);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+
+
 }

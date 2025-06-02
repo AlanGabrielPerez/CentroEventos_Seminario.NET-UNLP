@@ -60,7 +60,7 @@ while (!salir)
     switch (opcion)
     {
         case "1":
-            MenuPersonas.Ejecutar(idUsuario, personaRepo, personaValidador, auth);
+            new MenuPersonas(idUsuario, personaRepo, personaValidador, auth).Ejecutar();
             break;
         case "2":
             MenuEventos.Ejecutar(idUsuario, eventoRepo, eventoValidador, personaRepo, auth);
