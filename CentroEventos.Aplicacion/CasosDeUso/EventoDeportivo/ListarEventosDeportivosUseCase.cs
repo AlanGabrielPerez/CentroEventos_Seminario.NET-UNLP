@@ -3,15 +3,10 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class ListarEventosDeportivosUseCase
+public class ListarEventosDeportivosUseCase(
+        IEventoDeportivoRepositorio eventoRepo,
+        IServicioAutorizacion auth): EventoDeportivoUseCase(eventoRepo, auth)
 {
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-
-    public ListarEventosDeportivosUseCase(IEventoDeportivoRepositorio eventoRepo)
-    {
-        _eventoRepo = eventoRepo;
-    }
-
     public List<EventoDeportivo> Ejecutar()
     {
         return _eventoRepo.ObtenerTodos();

@@ -2,27 +2,21 @@ using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Excepciones;
 using CentroEventos.Aplicacion.Interfaces;
 using CentroEventos.Aplicacion.Validadores;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class ActualizarEventoDeportivoUseCase
+public class ActualizarEventoDeportivoUseCase(
+        IEventoDeportivoRepositorio eventoRepo,IServicioAutorizacion auth,
+        IPersonaRepositorio personaRepo,EventoDeportivoValidador validador): EventoDeportivoUseCase(eventoRepo, auth)
 {
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-    private readonly IPersonaRepositorio _personaRepo;
-    private readonly EventoDeportivoValidador _validador;
+    private readonly IPersonaRepositorio _personaRepo= personaRepo;
+    private readonly EventoDeportivoValidador _validador = validador;
 
-    public ActualizarEventoDeportivoUseCase(
-        IEventoDeportivoRepositorio eventoRepo,
-        IPersonaRepositorio personaRepo,
-        EventoDeportivoValidador validador)
+    public void Ejecutar(EventoDeportivo evento,int idUsuario)
     {
-        _eventoRepo = eventoRepo;
-        _personaRepo = personaRepo;
-        _validador = validador;
-    }
+        VerificarPermiso(idUsuario, Permiso.EventoModificacion);
 
-    public void Ejecutar(EventoDeportivo evento)
-    {
         var eventoExistente = _eventoRepo.ObtenerPorId(evento.Id);
         if (eventoExistente == null)
             throw new EntidadNotFoundException($"No se encontró un evento con ID {evento.Id}.");

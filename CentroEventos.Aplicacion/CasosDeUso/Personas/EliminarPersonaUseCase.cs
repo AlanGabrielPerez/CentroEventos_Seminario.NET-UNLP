@@ -1,26 +1,20 @@
 using CentroEventos.Aplicacion.Excepciones;
 using CentroEventos.Aplicacion.Interfaces;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class EliminarPersonaUseCase
+public class EliminarPersonaUseCase(IPersonaRepositorio personaRepo,
+            IServicioAutorizacion auth,IEventoDeportivoRepositorio eventoRepo,
+        IReservaRepositorio reservaRepo) : PersonaUseCase(personaRepo,auth)
 {
-    private readonly IPersonaRepositorio _personaRepo;
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-    private readonly IReservaRepositorio _reservaRepo;
+    private readonly IEventoDeportivoRepositorio _eventoRepo = eventoRepo;
+    private readonly IReservaRepositorio _reservaRepo = reservaRepo;
 
-    public EliminarPersonaUseCase(
-        IPersonaRepositorio personaRepo,
-        IEventoDeportivoRepositorio eventoRepo,
-        IReservaRepositorio reservaRepo)
+    public void Ejecutar(int id, int idUsuario)
     {
-        _personaRepo = personaRepo;
-        _eventoRepo = eventoRepo;
-        _reservaRepo = reservaRepo;
-    }
+        VerificarPermiso(idUsuario, Permiso.UsuarioBaja);
 
-    public void Ejecutar(int id)
-    {
         var persona = _personaRepo.ObtenerPorId(id);
         if (persona == null)
             throw new EntidadNotFoundException($"No se encontró una persona con ID {id}.");

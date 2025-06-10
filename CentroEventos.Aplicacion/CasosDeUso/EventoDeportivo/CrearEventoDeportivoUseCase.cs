@@ -2,30 +2,27 @@ using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Interfaces;
 using CentroEventos.Aplicacion.Validadores;
 using CentroEventos.Aplicacion.Excepciones;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class CrearEventoDeportivoUseCase
-{
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-    private readonly IPersonaRepositorio _personaRepo;
-    private readonly EventoDeportivoValidador _validador;
-
-    public CrearEventoDeportivoUseCase(
+public class CrearEventoDeportivoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
+        IServicioAutorizacion auth,
         IPersonaRepositorio personaRepo,
-        EventoDeportivoValidador validador)
-    {
-        _eventoRepo = eventoRepo;
-        _personaRepo = personaRepo;
-        _validador = validador;
-    }
+        EventoDeportivoValidador validador) : EventoDeportivoUseCase(eventoRepo, auth)
+{
+    private readonly IPersonaRepositorio _personaRepo = personaRepo;
+    private readonly EventoDeportivoValidador _validador = validador;
 
-    public void Ejecutar(EventoDeportivo evento)
+    public void Ejecutar(EventoDeportivo evento, int idUsuario)
     {
+        VerificarPermiso(idUsuario, Permiso.EventoAlta);
+
         if (!_validador.Validar(evento, _personaRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
         _eventoRepo.Agregar(evento);
+
     }
 }

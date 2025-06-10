@@ -3,15 +3,8 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class ListarPersonasUseCase
+public class ListarPersonasUseCase(IPersonaRepositorio personaRepo,IServicioAutorizacion auth): PersonaUseCase(personaRepo, auth)
 {
-    private readonly IPersonaRepositorio _personaRepo;
-
-    public ListarPersonasUseCase(IPersonaRepositorio personaRepo)
-    {
-        _personaRepo = personaRepo;
-    }
-
     public List<Persona> Ejecutar()
     {
         return _personaRepo.ObtenerTodas();

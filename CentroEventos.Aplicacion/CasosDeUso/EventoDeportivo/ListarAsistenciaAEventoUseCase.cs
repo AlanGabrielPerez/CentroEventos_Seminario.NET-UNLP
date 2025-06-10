@@ -4,18 +4,12 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class ListarAsistenciaAEventoUseCase
-{
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-    private readonly IReservaRepositorio _reservaRepo;
-
-    public ListarAsistenciaAEventoUseCase(
+public class ListarAsistenciaAEventoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
-        IReservaRepositorio reservaRepo)
-    {
-        _eventoRepo = eventoRepo;
-        _reservaRepo = reservaRepo;
-    }
+        IServicioAutorizacion auth,
+        IReservaRepositorio reservaRepo): EventoDeportivoUseCase(eventoRepo, auth)
+{
+    private readonly IReservaRepositorio _reservaRepo = reservaRepo;
 
     public List<Reserva> Ejecutar(int eventoId)
     {

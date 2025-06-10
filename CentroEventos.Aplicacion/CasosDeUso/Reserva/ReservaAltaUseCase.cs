@@ -6,32 +6,19 @@ using CentroEventos.Aplicacion.Validadores;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class ReservaAltaUseCase
+public class ReservaAltaUseCase(
+        IReservaRepositorio reservaRepo,IServicioAutorizacion auth,
+        IEventoDeportivoRepositorio eventoRepo,IPersonaRepositorio personaRepo,
+        ReservaValidador validador): ReservaUseCase(reservaRepo,auth)
 {
-    private readonly IServicioAutorizacion _servicioAuth;
-    private readonly IReservaRepositorio _reservaRepo;
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-    private readonly IPersonaRepositorio _personaRepo;
-    private readonly ReservaValidador _validador;
-
-    public ReservaAltaUseCase(
-        IServicioAutorizacion servicioAuth,
-        IReservaRepositorio reservaRepo,
-        IEventoDeportivoRepositorio eventoRepo,
-        IPersonaRepositorio personaRepo,
-        ReservaValidador validador)
-    {
-        _servicioAuth = servicioAuth;
-        _reservaRepo = reservaRepo;
-        _eventoRepo = eventoRepo;
-        _personaRepo = personaRepo;
-        _validador = validador;
-    }
+    private readonly IEventoDeportivoRepositorio _eventoRepo = eventoRepo;
+    private readonly IPersonaRepositorio _personaRepo = personaRepo;
+    private readonly ReservaValidador _validador = validador;
 
     public void Ejecutar(Reserva reserva, int idUsuario)
     {
-        if (!_servicioAuth.PoseeElPermiso(idUsuario, Permiso.ReservaAlta))
-            throw new FalloAutorizacionException("No tiene permiso para registrar reservas.");
+
+        VerificarPermiso(idUsuario, Permiso.ReservaAlta);
 
         var persona = _personaRepo.ObtenerPorId(reserva.PersonaId);
         if (persona == null)

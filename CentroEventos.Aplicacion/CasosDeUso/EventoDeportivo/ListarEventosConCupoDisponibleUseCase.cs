@@ -3,18 +3,12 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class ListarEventosConCupoDisponibleUseCase
-{
-    private readonly IEventoDeportivoRepositorio _eventoRepo;
-    private readonly IReservaRepositorio _reservaRepo;
-
-    public ListarEventosConCupoDisponibleUseCase(
+public class ListarEventosConCupoDisponibleUseCase(
         IEventoDeportivoRepositorio eventoRepo,
-        IReservaRepositorio reservaRepo)
-    {
-        _eventoRepo = eventoRepo;
-        _reservaRepo = reservaRepo;
-    }
+        IServicioAutorizacion auth,
+        IReservaRepositorio reservaRepo): EventoDeportivoUseCase(eventoRepo, auth)
+{
+    private readonly IReservaRepositorio _reservaRepo = reservaRepo;
 
     public List<EventoDeportivo> Ejecutar()
     {
