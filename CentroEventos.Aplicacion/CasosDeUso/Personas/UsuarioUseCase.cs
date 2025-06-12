@@ -3,9 +3,9 @@ using CentroEventos.Aplicacion.Excepciones;
 using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
-public abstract class PersonaUseCase(IPersonaRepositorio personaRepo, IServicioAutorizacion auth)
+public abstract class UsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioAutorizacion auth)
 {
-    protected readonly IPersonaRepositorio _personaRepo = personaRepo;
+    protected readonly IUsuarioRepositorio _UsuarioRepo = UsuarioRepo;
     protected readonly IServicioAutorizacion _auth = auth;
 
     protected void VerificarPermiso(int idUsuario, Permiso permiso)

@@ -9,17 +9,17 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 public class CrearEventoDeportivoUseCase(
         IEventoDeportivoRepositorio eventoRepo,
         IServicioAutorizacion auth,
-        IPersonaRepositorio personaRepo,
+        IUsuarioRepositorio UsuarioRepo,
         EventoDeportivoValidador validador) : EventoDeportivoUseCase(eventoRepo, auth)
 {
-    private readonly IPersonaRepositorio _personaRepo = personaRepo;
+    private readonly IUsuarioRepositorio _UsuarioRepo = UsuarioRepo;
     private readonly EventoDeportivoValidador _validador = validador;
 
     public void Ejecutar(EventoDeportivo evento, int idUsuario)
     {
         VerificarPermiso(idUsuario, Permiso.EventoAlta);
 
-        if (!_validador.Validar(evento, _personaRepo, out string mensajeError))
+        if (!_validador.Validar(evento, _UsuarioRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
         _eventoRepo.Agregar(evento);

@@ -56,7 +56,7 @@ public class RepositorioReserva : IReservaRepositorio
                 return new Reserva
                 {
                     Id = reservaId,
-                    PersonaId = int.Parse(datos[1]),
+                    UsuarioId = int.Parse(datos[1]),
                     EventoDeportivoId = int.Parse(datos[2]),
                     FechaAltaReserva = DateTime.Parse(datos[3]),
                     EstadoAsistencia = Enum.Parse<EstadoAsistencia>(datos[4])
@@ -95,7 +95,7 @@ public class RepositorioReserva : IReservaRepositorio
         return contador;
     }
 
-    public bool ExisteReserva(int personaId, int eventoId)
+    public bool ExisteReserva(int UsuarioId, int eventoId)
     {
         using var sr = new StreamReader(_rutaArchivo);
         while (!sr.EndOfStream)
@@ -103,7 +103,7 @@ public class RepositorioReserva : IReservaRepositorio
             var linea = sr.ReadLine();
             if (string.IsNullOrWhiteSpace(linea)) continue;
             var datos = linea.Split(';');
-            if (datos.Length >= 3 && int.Parse(datos[1]) == personaId &&
+            if (datos.Length >= 3 && int.Parse(datos[1]) == UsuarioId &&
                 int.Parse(datos[2]) == eventoId)
             {
                 return true;
@@ -112,7 +112,7 @@ public class RepositorioReserva : IReservaRepositorio
         return false;
     }
 
-    public bool TieneReservasAsociadas(int personaId)
+    public bool TieneReservasAsociadas(int UsuarioId)
     {
         using var sr = new StreamReader(_rutaArchivo);
         while (!sr.EndOfStream)
@@ -120,7 +120,7 @@ public class RepositorioReserva : IReservaRepositorio
             var linea = sr.ReadLine();
             if (string.IsNullOrWhiteSpace(linea)) continue;
             var datos = linea.Split(';');
-            if (datos.Length >= 2 && int.Parse(datos[1]) == personaId)
+            if (datos.Length >= 2 && int.Parse(datos[1]) == UsuarioId)
                 return true;
         }
         return false;
@@ -140,7 +140,7 @@ public class RepositorioReserva : IReservaRepositorio
                 var reserva = new Reserva
                 {
                     Id = int.Parse(datos[0]),
-                    PersonaId = int.Parse(datos[1]),
+                    UsuarioId = int.Parse(datos[1]),
                     EventoDeportivoId = int.Parse(datos[2]),
                     FechaAltaReserva = DateTime.Parse(datos[3]),
                     EstadoAsistencia = Enum.Parse<EstadoAsistencia>(datos[4])
@@ -151,9 +151,9 @@ public class RepositorioReserva : IReservaRepositorio
         return listaReservas;
     }
 
-    public List<Reserva> ObtenerPorPersonaId(int personaId)
+    public List<Reserva> ObtenerPorUsuarioId(int UsuarioId)
     {
-        return ObtenerTodas().Where(r => r.PersonaId == personaId).ToList();
+        return ObtenerTodas().Where(r => r.UsuarioId == UsuarioId).ToList();
     }
 
     public List<Reserva> ObtenerPorEventoId(int eventoId)

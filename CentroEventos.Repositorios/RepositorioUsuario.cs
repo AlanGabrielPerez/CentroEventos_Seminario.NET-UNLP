@@ -3,12 +3,12 @@ using CentroEventos.Aplicacion.Entidades;
 
 namespace CentroEventos.Repositorios;
 
-public class RepositorioPersona : IPersonaRepositorio
+public class RepositorioUsuario : IUsuarioRepositorio
 
 {
 
     readonly string _rutaArchivo;
-    public RepositorioPersona()
+    public RepositorioUsuario()
     {
         string _carpetaArchivos = Path.Combine(Environment.CurrentDirectory,
                 "..", "..", "..", "..",
@@ -17,38 +17,37 @@ public class RepositorioPersona : IPersonaRepositorio
         _rutaArchivo = Path.Combine(_carpetaArchivos, "personas.txt");
     }
     
-
-    public void Actualizar(Persona persona)
+    public void Actualizar(Usuario usuario)
     {
-        var listaPersonas = ObtenerTodas(); 
-        int indice = listaPersonas.FindIndex(p => p.Id == persona.Id);
+        var listaUsuarios = ObtenerTodas(); 
+        int indice = listaUsuarios.FindIndex(p => p.Id == usuario.Id);
         if (indice == -1)
-            throw new Exception($"No se encontro una persona con ID {persona.Id}.");
+            throw new Exception($"No se encontro una Usuario con ID {usuario.Id}.");
 
-        listaPersonas[indice] = persona;
+        listaUsuarios[indice] = usuario;
 
         using var sw = new StreamWriter(_rutaArchivo, false);
-        foreach (var p in listaPersonas)
+        foreach (var p in listaUsuarios)
             sw.WriteLine(p.ToString());
     }
 
-    public void Crear(Persona persona)
+    public void Crear(Usuario Usuario)
     {
-        var repoID = new RepositorioGestorIDs("persona");
-        persona.Id = repoID.ObtenerSiguienteId();
+        var repoID = new RepositorioGestorIDs("Usuario");
+        Usuario.Id = repoID.ObtenerSiguienteId();
         using var sw = new StreamWriter(_rutaArchivo,true);
                 
-        sw.WriteLine(persona.ToString());
+        sw.WriteLine(Usuario.ToString());
     }
 
     public void Eliminar(int id)
     {
-        var ListaPersonas = ObtenerTodas();
-        ListaPersonas.RemoveAll(p => p.Id == id);
+        var ListaUsuarios = ObtenerTodas();
+        ListaUsuarios.RemoveAll(p => p.Id == id);
 
         using var sw = new StreamWriter(_rutaArchivo, false);
-        foreach (var persona in ListaPersonas)
-            sw.WriteLine(persona.ToString());
+        foreach (var Usuario in ListaUsuarios)
+            sw.WriteLine(Usuario.ToString());
     }
 
     public bool ExisteDni(string? dni)
@@ -83,7 +82,7 @@ public class RepositorioPersona : IPersonaRepositorio
         return false;
     }
 
-    public Persona? ObtenerPorDni(string dni)
+    public Usuario? ObtenerPorDni(string dni)
     {
         using var sr = new StreamReader(_rutaArchivo);
 
@@ -95,7 +94,7 @@ public class RepositorioPersona : IPersonaRepositorio
             var datos = linea.Split(';');
             if (datos.Length >= 6 && datos[1] == dni)
             {
-                return new Persona
+                return new Usuario
                 {
                     Id = int.Parse(datos[0]),
                     DNI = datos[1],
@@ -109,7 +108,7 @@ public class RepositorioPersona : IPersonaRepositorio
         return null;
     }
 
-    public Persona? ObtenerPorEmail(string email)
+    public Usuario? ObtenerPorEmail(string email)
     {
         using var sr = new StreamReader(_rutaArchivo);
 
@@ -121,7 +120,7 @@ public class RepositorioPersona : IPersonaRepositorio
             var datos = linea.Split(';');
             if (datos.Length >= 6 && datos[4] == email)
             {
-                return new Persona
+                return new Usuario
                 {
                     Id = int.Parse(datos[0]),
                     DNI = datos[1],
@@ -135,7 +134,7 @@ public class RepositorioPersona : IPersonaRepositorio
         return null;
     }
 
-    public Persona? ObtenerPorId(int id)
+    public Usuario? ObtenerPorId(int id)
     {
 
         using var sr = new StreamReader(_rutaArchivo);
@@ -146,11 +145,11 @@ public class RepositorioPersona : IPersonaRepositorio
             if (linea == null) continue;
             
             var datos = linea.Split(';');
-            if (int.TryParse(datos[0], out int personaId) && personaId == id)
+            if (int.TryParse(datos[0], out int UsuarioId) && UsuarioId == id)
             {
-                return new Persona
+                return new Usuario
                 {
-                    Id = personaId,
+                    Id = UsuarioId,
                     DNI = datos[1],
                     Nombre = datos[2],
                     Apellido = datos[3],
@@ -163,9 +162,9 @@ public class RepositorioPersona : IPersonaRepositorio
         return null;
     }
 
-    public List<Persona> ObtenerTodas()
+    public List<Usuario> ObtenerTodas()
     {
-        var listaPersonas = new List<Persona>();
+        var listaUsuarios = new List<Usuario>();
         using var sr = new StreamReader(_rutaArchivo);
 
     while (!sr.EndOfStream)
@@ -176,7 +175,7 @@ public class RepositorioPersona : IPersonaRepositorio
         var datos = linea.Split(';');
         if (datos.Length >= 6)
         {
-            var persona = new Persona
+            var Usuario = new Usuario
             {
                 Id = int.Parse(datos[0]),
                 DNI = datos[1],
@@ -185,10 +184,10 @@ public class RepositorioPersona : IPersonaRepositorio
                 Email = datos[4],
                 Telefono = datos[5]
             };
-            listaPersonas.Add(persona);
+            listaUsuarios.Add(Usuario);
         }
     }
-        return listaPersonas;
+        return listaUsuarios;
     }
 
 }

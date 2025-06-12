@@ -11,7 +11,7 @@ public class Reserva
 {
     public int Id { get; set; }
 
-    public int PersonaId { get; set; }
+    public int UsuarioId { get; set; }
 
     public int EventoDeportivoId { get; set; }
 
@@ -21,7 +21,7 @@ public class Reserva
 
     public override string ToString()
     {
-        return $"{Id};{PersonaId};{EventoDeportivoId};{FechaAltaReserva:yyyy-MM-ddTHH:mm:ss};{EstadoAsistencia}";
+        return $"{Id};{UsuarioId};{EventoDeportivoId};{FechaAltaReserva:yyyy-MM-ddTHH:mm:ss};{EstadoAsistencia}";
     }
 
 }

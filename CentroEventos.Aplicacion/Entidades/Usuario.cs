@@ -1,9 +1,10 @@
 namespace CentroEventos.Aplicacion.Entidades;
 
-public class Persona
+public class Usuario
 {
     public int Id { get; set; }
 
+    
     private string? _dni;
     private string? _nombre;
     private string? _apellido;

@@ -14,13 +14,13 @@ public interface IReservaRepositorio
 
     List<Reserva> ObtenerTodas();
 
-    List<Reserva> ObtenerPorPersonaId(int personaId);
+    List<Reserva> ObtenerPorUsuarioId(int usuarioId);
 
     List<Reserva> ObtenerPorEventoId(int eventoId);
 
-    bool ExisteReserva(int personaId, int eventoId);
+    bool ExisteReserva(int usuarioId, int eventoId);
 
-    bool TieneReservasAsociadas(int personaId);
+    bool TieneReservasAsociadas(int usuarioId);
 
     bool EventoTieneReservas(int eventoId);
 

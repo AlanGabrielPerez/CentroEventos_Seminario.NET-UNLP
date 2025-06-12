@@ -13,6 +13,6 @@ public interface IEventoDeportivoRepositorio
     void Actualizar(EventoDeportivo evento);
 
     void Eliminar(int id);
-    bool EsResponsableDeEventos(int personaId);
+    bool EsResponsableDeEventos(int UsuarioId);
 
 }

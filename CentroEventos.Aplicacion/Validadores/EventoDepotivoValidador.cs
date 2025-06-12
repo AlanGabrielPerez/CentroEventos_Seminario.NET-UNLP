@@ -8,7 +8,7 @@ public class EventoDeportivoValidador
 {
     public bool Validar(
         EventoDeportivo evento,
-        IPersonaRepositorio personaRepo,
+        IUsuarioRepositorio UsuarioRepo,
         out string mensajeError)
     {
         mensajeError = "";
@@ -28,8 +28,8 @@ public class EventoDeportivoValidador
         if (evento.DuracionHoras <= 0)
             mensajeError += "La duración del evento debe ser mayor que cero.\n";
 
-        if (personaRepo.ObtenerPorId(evento.ResponsableId) == null)
-            mensajeError += $"No existe una persona con ID {evento.ResponsableId} como responsable.\n";
+        if (UsuarioRepo.ObtenerPorId(evento.ResponsableId) == null)
+            mensajeError += $"No existe una Usuario con ID {evento.ResponsableId} como responsable.\n";
 
         return string.IsNullOrEmpty(mensajeError);
     }

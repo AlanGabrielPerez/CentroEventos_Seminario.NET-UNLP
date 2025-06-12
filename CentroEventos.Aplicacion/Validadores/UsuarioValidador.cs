@@ -3,42 +3,42 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.Validadores;
 
-public class PersonaValidador
+public class UsuarioValidador
 {
     public bool Validar(
-        Persona persona,
-        IPersonaRepositorio personaRepo,
+        Usuario Usuario,
+        IUsuarioRepositorio UsuarioRepo,
         out string mensajeError)
     {
         mensajeError = "";
 
-        if (string.IsNullOrWhiteSpace(persona.Nombre))
+        if (string.IsNullOrWhiteSpace(Usuario.Nombre))
             mensajeError += "El nombre no puede estar vacío.\n";
 
-        if (string.IsNullOrWhiteSpace(persona.Apellido))
+        if (string.IsNullOrWhiteSpace(Usuario.Apellido))
             mensajeError += "El apellido no puede estar vacío.\n";
 
-        if (string.IsNullOrWhiteSpace(persona.DNI))
+        if (string.IsNullOrWhiteSpace(Usuario.DNI))
             mensajeError += "El DNI no puede estar vacío.\n";
 
-        if (string.IsNullOrWhiteSpace(persona.Email))
+        if (string.IsNullOrWhiteSpace(Usuario.Email))
             mensajeError += "El email no puede estar vacío.\n";
 
         return string.IsNullOrEmpty(mensajeError);
     }
 
     public bool ValidarDuplicados(
-        Persona persona,
-        IPersonaRepositorio personaRepo,
+        Usuario Usuario,
+        IUsuarioRepositorio UsuarioRepo,
         out string mensajeError)
     {
         mensajeError = "";
 
-        if (personaRepo.ExisteDni(persona.DNI))
-            mensajeError += $"Ya existe una persona con el DNI {persona.DNI}.\n";
+        if (UsuarioRepo.ExisteDni(Usuario.DNI))
+            mensajeError += $"Ya existe una Usuario con el DNI {Usuario.DNI}.\n";
 
-        if (personaRepo.ExisteEmail(persona.Email))
-            mensajeError += $"Ya existe una persona con el email {persona.Email}.\n";
+        if (UsuarioRepo.ExisteEmail(Usuario.Email))
+            mensajeError += $"Ya existe una Usuario con el email {Usuario.Email}.\n";
 
         return string.IsNullOrEmpty(mensajeError);
     }

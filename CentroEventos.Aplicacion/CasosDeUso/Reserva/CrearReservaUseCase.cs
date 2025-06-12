@@ -8,11 +8,11 @@ namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class CrearReservaUseCase(
         IReservaRepositorio reservaRepo, IServicioAutorizacion auth,
-        IPersonaRepositorio personaRepo, IEventoDeportivoRepositorio eventoRepo,
+        IUsuarioRepositorio UsuarioRepo, IEventoDeportivoRepositorio eventoRepo,
         ReservaValidador validador): ReservaUseCase(reservaRepo, auth) 
     
 {
-    private readonly IPersonaRepositorio _personaRepo = personaRepo;
+    private readonly IUsuarioRepositorio _UsuarioRepo = UsuarioRepo;
     private readonly IEventoDeportivoRepositorio _eventoRepo = eventoRepo;
     private readonly ReservaValidador _validador  = validador;
 
@@ -23,7 +23,7 @@ public class CrearReservaUseCase(
         if (reserva == null)
             throw new ArgumentNullException(nameof(reserva), "La reserva no puede ser nula.");
      
-       if (!_validador.Validar(reserva, _personaRepo, _eventoRepo, _reservaRepo, out string mensajeError))
+       if (!_validador.Validar(reserva, _UsuarioRepo, _eventoRepo, _reservaRepo, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
         reserva.FechaAltaReserva = DateTime.Now;

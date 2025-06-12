@@ -7,15 +7,15 @@ public class ReservaValidador
 {
     public bool Validar(
         Reserva reserva,
-        IPersonaRepositorio personaRepo,
+        IUsuarioRepositorio UsuarioRepo,
         IEventoDeportivoRepositorio eventoRepo,
         IReservaRepositorio reservaRepo,
         out string mensajeError)
     {
         mensajeError = "";
 
-        if (personaRepo.ObtenerPorId(reserva.PersonaId) == null)
-            mensajeError += $"No existe una persona con ID {reserva.PersonaId}.\n";
+        if (UsuarioRepo.ObtenerPorId(reserva.UsuarioId) == null)
+            mensajeError += $"No existe una Usuario con ID {reserva.UsuarioId}.\n";
 
 
         var evento = eventoRepo.ObtenerPorId(reserva.EventoDeportivoId);
@@ -30,8 +30,8 @@ public class ReservaValidador
                 mensajeError += "El evento no tiene cupo disponible.\n";
         }
 
-        if (reservaRepo.ExisteReserva(reserva.PersonaId, reserva.EventoDeportivoId))
-            mensajeError += "Ya existe una reserva para esta persona en este evento.\n";
+        if (reservaRepo.ExisteReserva(reserva.UsuarioId, reserva.EventoDeportivoId))
+            mensajeError += "Ya existe una reserva para esta Usuario en este evento.\n";
 
         return string.IsNullOrEmpty(mensajeError);
     }
