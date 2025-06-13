@@ -3,14 +3,20 @@ namespace CentroEventos.Aplicacion.Entidades;
 public class Usuario
 {
     public int Id { get; set; }
-
-    
+    public string? _password { get; set; }
     private string? _dni;
     private string? _nombre;
     private string? _apellido;
     private string? _email;
     private string? _telefono;
-
+    public List<PermisoUsuario> Permisos { get; set; } = new List<PermisoUsuario>();
+    
+    public string? Password
+    {
+        get => _password;
+        set => _password = value;
+    }
+    
     public string? DNI
     {
         get => _dni;
@@ -41,9 +47,10 @@ public class Usuario
         set => _telefono = value;
     }
 
+
     public override string ToString()
-{
-    return $"{Id};{DNI};{Nombre};{Apellido};{Email};{Telefono}";
-}
+    {
+        return $"{Id};{DNI};{Nombre};{Apellido};{Email};{Telefono}";
+    }
 
 }

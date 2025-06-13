@@ -23,6 +23,9 @@ public class UsuarioValidador
 
         if (string.IsNullOrWhiteSpace(Usuario.Email))
             mensajeError += "El email no puede estar vacío.\n";
+        
+        if (string.IsNullOrWhiteSpace(Usuario.Password))
+            mensajeError += "Debe establecer una contraseña.\n";
 
         return string.IsNullOrEmpty(mensajeError);
     }
