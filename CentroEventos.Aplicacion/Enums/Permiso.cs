@@ -10,5 +10,6 @@ public enum Permiso
     ReservaBaja,
     UsuarioAlta,
     UsuarioModificacion,
-    UsuarioBaja
+    UsuarioBaja,
+    Lectura
 }

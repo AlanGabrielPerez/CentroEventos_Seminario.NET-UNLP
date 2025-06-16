@@ -1,36 +1,39 @@
 using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Interfaces;
+using CentroEventos.Repositorios;
 
 namespace CentroEventos.Aplicacion.Repositorios;
 
-public class RepositorioSolicitudUsuario(ISolicitudUsuarioRepositorio solicitudRepo) : ISolicitudUsuarioRepositorio
+public class RepositorioSolicitudUsuario(CentroEventoContext context) : RepositorioDbContext(context), ISolicitudUsuarioRepositorio
 {
-    private readonly ISolicitudUsuarioRepositorio _solicitudRepo = solicitudRepo;
-
-    public void CrearSolicitud(SolicitudUsuario solicitudUsuario)
-    {
-        
-    }
+    public void CrearSolicitud(SolicitudUsuario solicitudUsuario) => Create(solicitudUsuario);
 
     public void AceptarSolicitud(int id)
     {
-        var solicitud = _solicitudRepo.ObtenerPorId(id);
-        solicitud.Estado = Estado.Aceptada;
+        var solicitud = GetByID<SolicitudUsuario>(id);
+        if (solicitud != null)
+        {
+            solicitud.Estado = Estado.Aceptada;
+            Update(solicitud);
+        }
+
     }
 
     public void RechazarSolicitud(int id)
     {
-        var solicitud = _solicitudRepo.ObtenerPorId(id);
+        var solicitud = GetByID<SolicitudUsuario>(id);
+        if (solicitud != null)
+        {
             solicitud.Estado = Estado.Rechazada;
+            Update(solicitud);
+        }
     }
 
-    public List<SolicitudUsuario> ObtenerSolicitudesPendientes()
-    {
-        return null;
-    }
+    public List<SolicitudUsuario>? ObtenerSolicitudesPendientes() => _context.SolicitudesUsuario
+        .Where(s => s.Estado == Estado.Pendiente)
+        .ToList();
 
-    public SolicitudUsuario ObtenerPorId(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public SolicitudUsuario? ObtenerPorId(int id) => GetByID<SolicitudUsuario>(id);
+    
+    
 }

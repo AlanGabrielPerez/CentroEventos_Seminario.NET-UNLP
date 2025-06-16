@@ -11,7 +11,7 @@ public interface IUsuarioRepositorio
 
     Usuario? ObtenerPorEmail(string email);
 
-    List<Usuario> ObtenerTodas();
+    List<Usuario>? ObtenerTodas();
 
     void Crear(Usuario usuario);
 
