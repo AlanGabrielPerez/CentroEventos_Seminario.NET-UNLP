@@ -10,10 +10,11 @@ public class CentroEventoContext : DbContext
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<SolicitudUsuario> SolicitudesUsuario { get; set; }
     public DbSet<PermisoUsuario> PermisosUsuario { get; set; }
+    public DbSet<SolicitudReserva> SolicitudesReservas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=CentroEventos.sqlite");
-         }
+    }
 
 }

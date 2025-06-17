@@ -3,11 +3,13 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.Validadores;
 
-public class UsuarioValidador
+public class UsuarioValidador(Usuario Usuario,
+        IUsuarioRepositorio UsuarioRepo)
 {
+    private readonly IUsuarioRepositorio _usuarioRepo = UsuarioRepo;
+
     public bool Validar(
-        Usuario Usuario,
-        IUsuarioRepositorio UsuarioRepo,
+        
         out string mensajeError)
     {
         mensajeError = "";
@@ -30,17 +32,14 @@ public class UsuarioValidador
         return string.IsNullOrEmpty(mensajeError);
     }
 
-    public bool ValidarDuplicados(
-        Usuario Usuario,
-        IUsuarioRepositorio UsuarioRepo,
-        out string mensajeError)
+    public bool ValidarDuplicados(out string mensajeError)
     {
         mensajeError = "";
 
-        if (UsuarioRepo.ExisteDni(Usuario.DNI))
+        if (_usuarioRepo.ExisteDni(Usuario.DNI))
             mensajeError += $"Ya existe una Usuario con el DNI {Usuario.DNI}.\n";
 
-        if (UsuarioRepo.ExisteEmail(Usuario.Email))
+        if (_usuarioRepo.ExisteEmail(Usuario.Email))
             mensajeError += $"Ya existe una Usuario con el email {Usuario.Email}.\n";
 
         return string.IsNullOrEmpty(mensajeError);

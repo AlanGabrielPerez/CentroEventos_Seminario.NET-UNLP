@@ -17,10 +17,10 @@ public class SolicitudUsuarioUseCase(
 
     public void Ejecutar(SolicitudUsuario usuario)
     {
-        if (!_validador.Validar(usuario, _usuarioRepo, out string mensajeError))
+        if (!_validador.Validar(out string mensajeError))
             throw new ValidacionException(mensajeError);
 
-        if (!_validador.ValidarDuplicados(usuario, _usuarioRepo, out mensajeError))
+        if (!_validador.ValidarDuplicados(out mensajeError))
             throw new DuplicadoException(mensajeError);
 
         _solicitudRepo.CrearSolicitud(usuario);

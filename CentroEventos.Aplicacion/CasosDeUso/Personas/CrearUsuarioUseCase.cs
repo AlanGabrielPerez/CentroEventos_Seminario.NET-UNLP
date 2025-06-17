@@ -14,10 +14,10 @@ public class CrearUsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioAutor
     {
        VerificarPermiso(idUsuario, Permiso.UsuarioAlta);
 
-        if (!_validador.Validar(Usuario, _UsuarioRepo, out string mensajeError))
+        if (!_validador.Validar(out string mensajeError))
             throw new ValidacionException(mensajeError);
 
-        if (!_validador.ValidarDuplicados(Usuario, _UsuarioRepo, out mensajeError))
+        if (!_validador.ValidarDuplicados(out mensajeError))
             throw new DuplicadoException(mensajeError);
 
         _UsuarioRepo.Crear(Usuario);

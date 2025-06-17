@@ -15,7 +15,7 @@ public class ActualizarUsuarioUseCase(IUsuarioRepositorio UsuarioRepo,
     {
         VerificarPermiso(idUsuario, Permiso.UsuarioModificacion);
 
-        if (!_validador.Validar(Usuario, _UsuarioRepo, out string mensajeError))
+        if (!_validador.Validar(out string mensajeError))
             throw new ValidacionException(mensajeError);
 
         _UsuarioRepo.Actualizar(Usuario);

@@ -1,6 +1,7 @@
 using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Interfaces;
 using CentroEventos.Repositorios;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.Repositorios;
 
@@ -13,7 +14,7 @@ public class RepositorioSolicitudUsuario(CentroEventoContext context) : Reposito
         var solicitud = GetByID<SolicitudUsuario>(id);
         if (solicitud != null)
         {
-            solicitud.Estado = Estado.Aceptada;
+            solicitud.Estado = EstadoSolicitud.Aceptada;
             Update(solicitud);
         }
 
@@ -24,16 +25,16 @@ public class RepositorioSolicitudUsuario(CentroEventoContext context) : Reposito
         var solicitud = GetByID<SolicitudUsuario>(id);
         if (solicitud != null)
         {
-            solicitud.Estado = Estado.Rechazada;
+            solicitud.Estado = EstadoSolicitud.Rechazada;
             Update(solicitud);
         }
     }
 
     public List<SolicitudUsuario>? ObtenerSolicitudesPendientes() => _context.SolicitudesUsuario
-        .Where(s => s.Estado == Estado.Pendiente)
+        .Where(s => s.Estado == EstadoSolicitud.Pendiente)
         .ToList();
 
     public SolicitudUsuario? ObtenerPorId(int id) => GetByID<SolicitudUsuario>(id);
-    
-    
+
+
 }

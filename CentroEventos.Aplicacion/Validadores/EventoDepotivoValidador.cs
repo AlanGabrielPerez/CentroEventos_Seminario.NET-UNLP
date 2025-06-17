@@ -4,12 +4,12 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.Validadores;
 
-public class EventoDeportivoValidador
-{
-    public bool Validar(
+public class EventoDeportivoValidador(
         EventoDeportivo evento,
-        IUsuarioRepositorio UsuarioRepo,
-        out string mensajeError)
+        IUsuarioRepositorio UsuarioRepo)
+{
+    private readonly IUsuarioRepositorio _usuarioRepo = UsuarioRepo;
+    public bool Validar(out string mensajeError)
     {
         mensajeError = "";
 
@@ -28,7 +28,7 @@ public class EventoDeportivoValidador
         if (evento.DuracionHoras <= 0)
             mensajeError += "La duración del evento debe ser mayor que cero.\n";
 
-        if (UsuarioRepo.ObtenerPorId(evento.ResponsableId) == null)
+        if (_usuarioRepo.ObtenerPorId(evento.ResponsableId) == null)
             mensajeError += $"No existe una Usuario con ID {evento.ResponsableId} como responsable.\n";
 
         return string.IsNullOrEmpty(mensajeError);

@@ -24,7 +24,7 @@ public class ActualizarEventoDeportivoUseCase(
         if (eventoExistente.FechaHoraInicio < DateTime.Now)
             throw new OperacionInvalidaException("No se puede modificar un evento pasado.");
 
-        if (!_validador.Validar(evento, _UsuarioRepo, out string mensajeError))
+        if (!_validador.Validar(out string mensajeError))
             throw new ValidacionException(mensajeError);
 
         _eventoRepo.Actualizar(evento);

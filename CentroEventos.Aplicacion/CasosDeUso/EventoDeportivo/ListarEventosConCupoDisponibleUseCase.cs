@@ -1,5 +1,6 @@
 using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Interfaces;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
@@ -10,8 +11,9 @@ public class ListarEventosConCupoDisponibleUseCase(
 {
     private readonly IReservaRepositorio _reservaRepo = reservaRepo;
 
-    public List<EventoDeportivo> Ejecutar()
+    public List<EventoDeportivo> Ejecutar(int idUsuario)
     {
+        VerificarPermiso(idUsuario, Permiso.Lectura);
         var fechaActual = DateTime.Now;
         var listaEventos = _eventoRepo.ObtenerTodos();
 

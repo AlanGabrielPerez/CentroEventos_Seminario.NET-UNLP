@@ -1,4 +1,7 @@
+using CentroEventos.Aplicacion.Enums;
+
 namespace CentroEventos.Aplicacion.Entidades;
+
 public class PermisoUsuario
 {
     public int PersonaId { get; set; }
