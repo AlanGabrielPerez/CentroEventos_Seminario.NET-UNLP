@@ -6,8 +6,7 @@ public interface ISolicitudUsuarioRepositorio
 {
     SolicitudUsuario? ObtenerPorId(int id);
     void CrearSolicitud(SolicitudUsuario solicitudUsuario);
-    void AceptarSolicitud(int id);
-    void RechazarSolicitud(int id);
+    void ActualizarSolicitud(SolicitudUsuario solicitudUsuario);
     List<SolicitudUsuario>? ObtenerSolicitudesPendientes();
     
 }

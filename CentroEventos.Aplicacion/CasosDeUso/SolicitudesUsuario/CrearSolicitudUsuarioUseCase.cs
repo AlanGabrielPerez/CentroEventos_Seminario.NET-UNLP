@@ -5,16 +5,13 @@ using CentroEventos.Aplicacion.Excepciones;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class SolicitudUsuarioUseCase(
-    IUsuarioRepositorio UsuarioRepo,
+public class CrearSolicitudUsuarioUseCase(
      UsuarioValidador validador,
-     ISolicitudUsuarioRepositorio solicitudRepo)
+     ISolicitudUsuarioRepositorio solicitudRepo,
+     IServicioAutorizacion auth) : SolicitudUsuarioUseCase(solicitudRepo, auth)
     
 {
-    private readonly IUsuarioRepositorio _usuarioRepo = UsuarioRepo;
     private readonly UsuarioValidador _validador = validador;
-    private readonly ISolicitudUsuarioRepositorio _solicitudRepo = solicitudRepo;
-
     public void Ejecutar(SolicitudUsuario usuario)
     {
         if (!_validador.Validar(out string mensajeError))

@@ -9,28 +9,11 @@ public class RepositorioSolicitudReserva(CentroEventoContext context) : Reposito
 {
     public void CrearSolicitud(SolicitudReserva solicitudReserva) => Create(solicitudReserva);
 
-    public void AceptarSolicitud(int id)
-    {
-        var solicitud = GetByID<SolicitudReserva>(id);
-        if (solicitud != null)
-        {
-            solicitud.Estado = EstadoSolicitud.Aceptada;
-            Update(solicitud);
-        }
-    }
-
-    public void RechazarSolicitud(int id)
-    {
-        var solicitud = GetByID<SolicitudReserva>(id);
-        if (solicitud != null)
-        {
-            solicitud.Estado = EstadoSolicitud.Rechazada;
-            Update(solicitud);
-        }
-    }
+    public void ActualizarSolicitud(SolicitudReserva solicitudReserva) => Update(solicitudReserva);
 
     public List<SolicitudReserva>? ObtenerSolicitudesPendientesPorEvento(int idEvento) => _context.SolicitudesReservas
         .Where(s => s.Estado == EstadoSolicitud.Pendiente && s.EventoDeportivoId == idEvento)
+        .OrderBy(s => s.FechaSolicitud)
         .ToList();
 
     public SolicitudReserva? ObtenerPorId(int id) => GetByID<SolicitudReserva>(id);

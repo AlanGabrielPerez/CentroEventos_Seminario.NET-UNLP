@@ -9,26 +9,8 @@ public class RepositorioSolicitudUsuario(CentroEventoContext context) : Reposito
 {
     public void CrearSolicitud(SolicitudUsuario solicitudUsuario) => Create(solicitudUsuario);
 
-    public void AceptarSolicitud(int id)
-    {
-        var solicitud = GetByID<SolicitudUsuario>(id);
-        if (solicitud != null)
-        {
-            solicitud.Estado = EstadoSolicitud.Aceptada;
-            Update(solicitud);
-        }
+    public void ActualizarSolicitud(SolicitudUsuario solicitudUsuario) => Update(solicitudUsuario);
 
-    }
-
-    public void RechazarSolicitud(int id)
-    {
-        var solicitud = GetByID<SolicitudUsuario>(id);
-        if (solicitud != null)
-        {
-            solicitud.Estado = EstadoSolicitud.Rechazada;
-            Update(solicitud);
-        }
-    }
 
     public List<SolicitudUsuario>? ObtenerSolicitudesPendientes() => _context.SolicitudesUsuario
         .Where(s => s.Estado == EstadoSolicitud.Pendiente)
