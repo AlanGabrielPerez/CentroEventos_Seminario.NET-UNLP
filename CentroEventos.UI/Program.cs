@@ -1,3 +1,5 @@
+using CentroEventos.Aplicacion.Interfaces;
+using CentroEventos.Repositorios;
 using CentroEventos.UI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,8 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddDbContext<CentroEventoContext>(options =>
-    options.UseSqlite("Data Source=CentroEventos.sqlite"));
+
+builder.Services.AddSingleton<CentroEventoContext>();
+builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
+builder.Services.AddScoped<IEventoDeportivoRepositorio, RepositorioEventoDeportivo>();
+builder.Services.AddScoped<IReservaRepositorio, RepositorioReserva>();
+builder.Services.AddScoped<ISolicitudUsuarioRepositorio, RepositorioSolicitudUsuario>();
+builder.Services.AddScoped<ISolicitudReservaRepositorio, RepositorioSolicitudReserva>();
+builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacionRepositorio>();
+
 
 
 

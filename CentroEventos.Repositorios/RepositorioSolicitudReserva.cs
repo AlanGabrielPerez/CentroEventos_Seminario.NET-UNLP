@@ -1,9 +1,8 @@
 using CentroEventos.Aplicacion.Entidades;
 using CentroEventos.Aplicacion.Interfaces;
-using CentroEventos.Repositorios;
 using CentroEventos.Aplicacion.Enums;
 
-namespace CentroEventos.Aplicacion.Repositorios;
+namespace CentroEventos.Repositorios;
 
 public class RepositorioSolicitudReserva(CentroEventoContext context) : RepositorioDbContext(context), ISolicitudReservaRepositorio
 {

@@ -38,4 +38,9 @@ public class EventoDeportivo
     {
         return $"{Id};{Nombre};{Descripcion};{FechaHoraInicio:yyyy-MM-ddTHH:mm:ss};{DuracionHoras};{CupoMaximo};{ResponsableId}";
     }
+
+    public Usuario Responsable { get; set; } = null!;
+
+    public List<Reserva> Reservas { get; set; } = new List<Reserva>();
+
 }

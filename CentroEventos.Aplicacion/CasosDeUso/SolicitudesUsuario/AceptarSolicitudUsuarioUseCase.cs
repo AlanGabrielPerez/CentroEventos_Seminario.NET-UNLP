@@ -22,7 +22,7 @@ public class AceptarSolicitudUsuarioUseCase(
             Nombre = solicitud.Nombre,
             Apellido = solicitud.Apellido,
             Email = solicitud.Email,
-            Password = solicitud.Password,
+            PasswordHash = solicitud.PasswordHash,
             DNI = solicitud.DNI,
         };
 

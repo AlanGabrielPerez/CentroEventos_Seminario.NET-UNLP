@@ -3,18 +3,20 @@ namespace CentroEventos.Aplicacion.Entidades;
 public class Usuario
 {
     public int Id { get; set; }
-    public string? _password { get; set; }
+    public string? _passwordHash { get; set; }
     private string? _dni;
     private string? _nombre;
     private string? _apellido;
     private string? _email;
     private string? _telefono;
-    public List<PermisoUsuario> Permisos { get; set; } = new List<PermisoUsuario>();
+    public List<PermisoUsuario> Permisos { get; set; } = new List<PermisoUsuario>(); 
+    public List<EventoDeportivo> EventosOrganizados { get; set; } = new List<EventoDeportivo>();
+    public List<Reserva> Reservas { get; set; } = new List<Reserva>();
     
-    public string? Password
+    public string? PasswordHash
     {
-        get => _password;
-        set => _password = value;
+        get => _passwordHash;
+        set => _passwordHash = value;
     }
     
     public string? DNI

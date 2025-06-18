@@ -19,10 +19,18 @@ public class CrearEventoDeportivoUseCase(
     {
         VerificarPermiso(idUsuario, Permiso.EventoAlta);
 
-        if (!_validador.Validar( out string mensajeError))
+        var usuario = _UsuarioRepo.ObtenerPorId(evento.ResponsableId);
+        if (usuario == null)
+            throw new EntidadNotFoundException($"Usuario con ID {evento.ResponsableId} no encontrado.");
+
+        if (!_validador.Validar(out string mensajeError))
             throw new ValidacionException(mensajeError);
 
+        evento.Responsable = usuario;
         _eventoRepo.Agregar(evento);
+                
+        usuario.EventosOrganizados.Add(evento);
+        _UsuarioRepo.Actualizar(usuario);
 
     }
 }

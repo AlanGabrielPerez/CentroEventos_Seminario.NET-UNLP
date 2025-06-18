@@ -1,17 +1,17 @@
 using CentroEventos.Aplicacion.Interfaces;
 using CentroEventos.Aplicacion.Enums;
-using CentroEventos.Repositorios;
 using CentroEventos.Aplicacion.Entidades;
 
-public class ServicioAutorizacionRepositorio(CentroEventoContext context) :RepositorioDbContext(context),IServicioAutorizacion
+namespace CentroEventos.Repositorios;
+public class ServicioAutorizacionRepositorio(CentroEventoContext context) : RepositorioDbContext(context), IServicioAutorizacion
 {
-   
 
-    public void AgregarPermisoUsuario(PermisoUsuario permisoUsuario)=> Create(permisoUsuario);
+
+    public void AgregarPermisoUsuario(PermisoUsuario permisoUsuario) => Create(permisoUsuario);
     public void EliminarPermisoUsuario(int idPermisoUsuario)
-    { 
+    {
         var permisoUsuario = GetByID<PermisoUsuario>(idPermisoUsuario);
-        if(permisoUsuario!=null)
+        if (permisoUsuario != null)
             Delete(permisoUsuario);
     }
 

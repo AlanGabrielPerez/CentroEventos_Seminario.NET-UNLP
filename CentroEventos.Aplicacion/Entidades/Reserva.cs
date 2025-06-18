@@ -24,4 +24,7 @@ public class Reserva
         return $"{Id};{UsuarioId};{EventoDeportivoId};{FechaAltaReserva:yyyy-MM-ddTHH:mm:ss};{EstadoAsistencia}";
     }
 
+    public Usuario Usuario { get; set; } = null!;
+    public EventoDeportivo EventoDeportivo { get; set; } = null!;
+
 }

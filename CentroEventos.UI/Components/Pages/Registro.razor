@@ -1,0 +1,50 @@
+@page "/registro"
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@usuario" OnValidSubmit="Registrar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Email:</label>
+        <InputText class="form-control" @bind-Value="usuario.Email" />
+        <ValidationMessage For="@(() => usuario.Email)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Contraseña:</label>
+        <InputText class="form-control" @bind-Value="usuario.PasswordHash" type="password" />
+        <ValidationMessage For="@(() => usuario.PasswordHash)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <InputText class="form-control" @bind-Value="usuario.Nombre" />
+        <ValidationMessage For="@(() => usuario.Nombre)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Apellido:</label>
+        <InputText class="form-control" @bind-Value="usuario.Apellido" />
+        <ValidationMessage For="@(() => usuario.Apellido)" />
+    </div>
+
+    <div class="mb-3">
+        <label>DNI:</label>
+        <InputText class="form-control" @bind-Value="usuario.DNI" />
+        <ValidationMessage For="@(() => usuario.DNI)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrarse</button>
+</EditForm>
+
+@code {
+    private Usuario usuario = new Usuario();
+
+   void Registrar()
+    {
+        // Aquí se llamaría al servicio para registrar al usuario
+        // Por ejemplo: await usuarioService.Registrar(usuario);
+        Console.WriteLine("Usuario registrado: " + usuario.Email);
+    }
+}

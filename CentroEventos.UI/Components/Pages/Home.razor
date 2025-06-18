@@ -1,7 +1,36 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<h3>Iniciar Sesión</h3>
 
-<h1>Hello, world!</h1>
+<EditForm OnValidSubmit="IniciarSesion">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-Welcome to your new app.
+    <div class="mb-3">
+        <label>Email:</label>
+        <InputText class="form-control" @bind-Value="email" />
+    </div>
+
+    <div class="mb-3">
+        <label>Contraseña:</label>
+        <InputText type="password" class="form-control" @bind-Value="contrasena" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+</EditForm>
+
+<p class="mt-3">
+    ¿No tenés cuenta? <a href="/registro">Registrate</a>
+</p>
+
+@code {
+    private string? email;
+    private string? contrasena;
+
+    private Task IniciarSesion()
+    {
+        // Acá va tu lógica de login, use case o lo que uses
+        return Task.CompletedTask;
+    }
+}
