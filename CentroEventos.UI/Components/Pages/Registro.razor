@@ -1,10 +1,8 @@
 @page "/registro"
-@using System.ComponentModel.DataAnnotations
-@inject CrearSolicitudUsuarioUseCase crearSolicitudUsuario
+@rendermode InteractiveServer
 
-<EditForm Model="@usuario" OnValidSubmit="Registrar" FormName="formRegistro">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+@using System.ComponentModel.DataAnnotations
+@inject CrearUsuarioUseCase crearUsuario
 
     @if (!string.IsNullOrEmpty(mensaje))
     {
@@ -13,54 +11,49 @@
 
     <div class="mb-3">
         <label>Email:</label>
-        <InputText class="form-control" @bind-Value="usuario.Email" />
-        <ValidationMessage For="@(() => usuario.Email)" />
+        <input @bind="usuario.Email" class="form-control">
     </div>
 
     <div class="mb-3">
         <label>Contraseña:</label>
-        <InputText class="form-control" @bind-Value="usuario.PasswordHash" type="password" />
-        <ValidationMessage For="@(() => usuario.PasswordHash)" />
+        <input @bind="usuario.PasswordHash" type="password" class="form-control" />
     </div>
 
     <div class="mb-3">
         <label>Nombre:</label>
-        <InputText class="form-control" @bind-Value="usuario.Nombre" />
-        <ValidationMessage For="@(() => usuario.Nombre)" />
+        <input class="form-control" @bind="usuario.Nombre" />
     </div>
 
     <div class="mb-3">
         <label>Apellido:</label>
-        <InputText class="form-control" @bind-Value="usuario.Apellido" />
-        <ValidationMessage For="@(() => usuario.Apellido)" />
+        <input @bind="usuario.Apellido" class="form-control"/>
     </div>
 
     <div class="mb-3">
         <label>DNI:</label>
-        <InputText class="form-control" @bind-Value="usuario.DNI" />
-        <ValidationMessage For="@(() => usuario.DNI)" />
+        <input  @bind="usuario.DNI" class="form-control"/>
     </div>
 
-    <button type="submit" class="btn btn-primary">Registrarse</button>
-</EditForm>
+    <button class="btn btn-primary" @onclick="Registrar">Registrarse</button>
+
 
 @code {
-    private SolicitudUsuario usuario = new SolicitudUsuario();
+    private Usuario usuario = new Usuario();
   
     private string mensaje = "";
     private string claseMensaje = "";
 
-    private void Registrar()
+    void Registrar()
     {
         try
         {
             
-            crearSolicitudUsuario.Ejecutar(usuario);
+            crearUsuario.Ejecutar(usuario);
 
             mensaje = "Registro exitoso. Espera aprobación.";
             claseMensaje = "alert alert-success";
 
-            usuario = new SolicitudUsuario();
+            usuario = new Usuario();
         
         }
         catch (Exception ex)

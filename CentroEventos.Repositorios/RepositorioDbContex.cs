@@ -32,8 +32,8 @@ public abstract class RepositorioDbContext(CentroEventoContext context)
 
     public T? GetByID<T>(int id) where T : class
     {
-        return _context.Set<T>().Find(id) ?? throw new EntidadNotFoundException(typeof(T).Name + " con ID " + id + " no encontrada.");
-    }
+        return _context.Set<T>().Find(id);
+        }
 
     public void GuardarCambios()
     {

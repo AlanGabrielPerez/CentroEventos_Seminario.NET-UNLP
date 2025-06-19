@@ -14,13 +14,11 @@ builder.Services.AddScoped<CentroEventoContext>();
 builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
 builder.Services.AddScoped<IEventoDeportivoRepositorio, RepositorioEventoDeportivo>();
 builder.Services.AddScoped<IReservaRepositorio, RepositorioReserva>();
-builder.Services.AddScoped<ISolicitudUsuarioRepositorio, RepositorioSolicitudUsuario>();
-builder.Services.AddScoped<ISolicitudReservaRepositorio, RepositorioSolicitudReserva>();
 builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacionRepositorio>();
 
 // use cases
 builder.Services.AddScoped<UsuarioValidador>();
-builder.Services.AddTransient<CrearSolicitudUsuarioUseCase>();
+builder.Services.AddTransient<CrearUsuarioUseCase>();
 
 
 var app = builder.Build();

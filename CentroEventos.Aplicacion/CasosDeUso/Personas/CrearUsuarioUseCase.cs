@@ -3,6 +3,7 @@ using CentroEventos.Aplicacion.Interfaces;
 using CentroEventos.Aplicacion.Validadores;
 using CentroEventos.Aplicacion.Excepciones;
 using CentroEventos.Aplicacion.Enums;
+using CentroEventos.Aplicacion.Servicios;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
@@ -10,18 +11,40 @@ public class CrearUsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioAutor
 {
     private readonly UsuarioValidador _validador = validador;
 
-    public void Ejecutar(Usuario Usuario,int idUsuario)
+    public void Ejecutar(Usuario usuario)
     {
-       VerificarPermiso(idUsuario, Permiso.UsuarioAlta);
+        if (!_validador.Validar(usuario, out string mensajeError))
+                throw new ValidacionException(mensajeError);
 
-        if (!_validador.Validar(Usuario,out string mensajeError))
-            throw new ValidacionException(mensajeError);
+        if (!_validador.ValidarDuplicados(usuario, out mensajeError))
+               throw new DuplicadoException(mensajeError);
 
-        if (!_validador.ValidarDuplicados(Usuario, out mensajeError))
-            throw new DuplicadoException(mensajeError);
+        if (usuario.PasswordHash != null)
+            usuario.PasswordHash = ServicioHash.ConvertirASha256(usuario.PasswordHash);
+        
+        if (_UsuarioRepo.ObtenerPorId(1) == null)
+        {
+            usuario.EstadoSolicitud = EstadoSolicitud.Aceptada;
+            _UsuarioRepo.Crear(usuario);
 
-        Usuario.EstadoSolicitud = EstadoSolicitud.Pendiente;
+            foreach (Permiso permiso in Enum.GetValues(typeof(Permiso)))
+            {
+                var _permisoUsuario = new PermisoUsuario
+                {
+                    UsuarioId = usuario.Id,
+                    Permiso = permiso
+                };
+                _auth.AgregarPermisoUsuario(_permisoUsuario);
+                usuario.Permisos.Add(_permisoUsuario);
+            }
+        }
 
-        _UsuarioRepo.Crear(Usuario);
+        else
+        {
+
+            usuario.EstadoSolicitud = EstadoSolicitud.Pendiente;
+
+            _UsuarioRepo.Crear(usuario);
+        }
     }
 }
