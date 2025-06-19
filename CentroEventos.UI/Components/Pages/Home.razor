@@ -1,23 +1,19 @@
 ﻿@page "/"
-@using System.ComponentModel.DataAnnotations
-@inject NavigationManager Navigation
 
-<EditForm Model="@login" OnValidSubmit="IniciarSesion">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+@inject NavigationManager Navigation
 
     <div class="mb-3">
         <label>Email:</label>
-        <InputText class="form-control" @bind-Value="login.Email" />
+        <input class="form-control" @bind="Email" />
     </div>
 
     <div class="mb-3">
         <label>Contraseña:</label>
-        <InputText type="password" class="form-control" @bind-Value="login.Contrasena" />
+        <input type="password" class="form-control" @bind="Pass" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-</EditForm>
+    <button class="btn btn-primary" @onclick= "IniciarSesion" >Iniciar Sesión</button>
+
 
 <p class="mt-3">
     ¿No tenés una cuenta? 
@@ -25,23 +21,16 @@
 </p>
 
 @code {
-    private LoginModelo login = new();
+    private string? Email;
+    private string? Pass;
 
-    private async Task IniciarSesion()
+    void IniciarSesion()
     {
         // Acá usarías login.Email y login.Contrasena
-        Console.WriteLine($"Intento de login: {login.Email} - {login.Contrasena}");
+        Console.WriteLine($"Intento de login: {Email} - {Pass}");
 
         // redirigir si login exitoso
         Navigation.NavigateTo("/menu"); // ejemplo
     }
 
-    public class LoginModelo
-    {
-        [Required(ErrorMessage = "El email es obligatorio")]
-        public string? Email { get; set; }
-
-        [Required(ErrorMessage = "La contraseña es obligatoria")]
-        public string? Contrasena { get; set; }
-    }
 }
