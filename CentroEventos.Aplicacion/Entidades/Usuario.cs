@@ -1,3 +1,4 @@
+using CentroEventos.Aplicacion.Enums;
 namespace CentroEventos.Aplicacion.Entidades;
 
 public class Usuario
@@ -8,17 +9,22 @@ public class Usuario
     private string? _nombre;
     private string? _apellido;
     private string? _email;
-    private string? _telefono;
-    public List<PermisoUsuario> Permisos { get; set; } = new List<PermisoUsuario>(); 
+    private string? _telefono;    
+    public List<PermisoUsuario> Permisos { get; set; } = new List<PermisoUsuario>();
     public List<EventoDeportivo> EventosOrganizados { get; set; } = new List<EventoDeportivo>();
     public List<Reserva> Reservas { get; set; } = new List<Reserva>();
-    
+    private EstadoSolicitud _estadoSolicitud;
+    public EstadoSolicitud EstadoSolicitud
+    {
+        get => _estadoSolicitud;
+        set => _estadoSolicitud = value;
+    }
     public string? PasswordHash
     {
         get => _passwordHash;
         set => _passwordHash = value;
     }
-    
+
     public string? DNI
     {
         get => _dni;

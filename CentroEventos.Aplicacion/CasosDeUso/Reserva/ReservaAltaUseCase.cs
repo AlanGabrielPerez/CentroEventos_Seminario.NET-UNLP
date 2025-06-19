@@ -24,6 +24,8 @@ public class ReservaAltaUseCase(
         if (_validador.ValidarDuplicado(reserva, out string mensajeDuplicado))
             throw new DuplicadoException("La Usuario ya tiene una reserva para este evento");
 
+        reserva.EstadoSolicitud = EstadoSolicitud.Aceptada;
+       
         reserva.FechaAltaReserva = DateTime.Now;
         reserva.EstadoAsistencia = EstadoAsistencia.Pendiente;
 

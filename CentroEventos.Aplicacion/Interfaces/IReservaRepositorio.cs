@@ -26,4 +26,5 @@ public interface IReservaRepositorio
 
     int ContarReservasDeEvento(int eventoId);
 
+    List<Reserva>? ObtenerSolicitudesPendientesPorEvento(int idEvento);
 }

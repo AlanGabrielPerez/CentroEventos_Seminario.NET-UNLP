@@ -1,11 +1,7 @@
+using CentroEventos.Aplicacion.Enums;
+
 namespace CentroEventos.Aplicacion.Entidades;
 
-public enum EstadoAsistencia
-{
-    Pendiente,
-    Presente,
-    Ausente
-}
 
 public class Reserva
 {
@@ -18,6 +14,9 @@ public class Reserva
     public DateTime FechaAltaReserva { get; set; }
 
     public EstadoAsistencia EstadoAsistencia { get; set; }
+
+    public DateTime FechaSolicitud { get; set; }
+    public EstadoSolicitud EstadoSolicitud { get; set; }
 
     public override string ToString()
     {

@@ -4,18 +4,18 @@ using CentroEventos.Aplicacion.Enums;
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
 class RechazarSolicitudReservaUseCase(
-    ISolicitudReservaRepositorio solicitudRepo,
-    IServicioAutorizacion auth) : SolicitudReservaUseCase(solicitudRepo, auth)
+    IReservaRepositorio reservaRepo,
+    IServicioAutorizacion auth) : ReservaUseCase(reservaRepo, auth)
 {
     
     public void Ejecutar(int id, int idUsuario)
     {
         VerificarPermiso(idUsuario, Permiso.ReservaAlta);
-        var solicitud = _solicitudRepo.ObtenerPorId(id);
+        var solicitud = _reservaRepo.ObtenerPorId(id);
         if (solicitud == null)
             throw new KeyNotFoundException($"No se encontró una solicitud con el ID {id}.");
-            
-        solicitud.Estado = EstadoSolicitud.Rechazada;
-        _solicitudRepo.ActualizarSolicitud(solicitud); 
+        
+        solicitud.EstadoSolicitud = EstadoSolicitud.Rechazada;
+        _reservaRepo.Modificar(solicitud); 
     }
 }

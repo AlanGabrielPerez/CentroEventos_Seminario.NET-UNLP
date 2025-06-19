@@ -1,5 +1,6 @@
 using CentroEventos.Aplicacion.Interfaces;
 using CentroEventos.Aplicacion.Entidades;
+using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Repositorios;
 
@@ -27,5 +28,9 @@ public class RepositorioUsuario(CentroEventoContext context) : RepositorioDbCont
     public Usuario? ObtenerPorId(int id) => GetByID<Usuario>(id);
 
     public List<Usuario>? ObtenerTodas() => GetAll<Usuario>();
+
+    public List<Usuario>? ObtenerSolicitudesPendientes() => _context.Usuarios
+        .Where(u => u.EstadoSolicitud == EstadoSolicitud.Pendiente)
+        .ToList();
     
 }

@@ -20,6 +20,8 @@ public class CrearUsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioAutor
         if (!_validador.ValidarDuplicados(Usuario, out mensajeError))
             throw new DuplicadoException(mensajeError);
 
+        Usuario.EstadoSolicitud = EstadoSolicitud.Pendiente;
+
         _UsuarioRepo.Crear(Usuario);
     }
 }

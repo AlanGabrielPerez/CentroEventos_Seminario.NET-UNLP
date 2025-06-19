@@ -5,12 +5,12 @@ using CentroEventos.Aplicacion.Enums;
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
 public class ListarSolicitudesUsuarioPendientesUseCase(
-    ISolicitudUsuarioRepositorio solicitudRepo,
-    IServicioAutorizacion auth) : SolicitudUsuarioUseCase(solicitudRepo, auth)
+    IUsuarioRepositorio UsuarioRepo,
+    IServicioAutorizacion auth) : UsuarioUseCase(UsuarioRepo, auth)
 {
-    public List<SolicitudUsuario>? Ejecutar(int idUsuario)
+    public List<Usuario>? Ejecutar(int idUsuario)
     {
         VerificarPermiso(idUsuario, Permiso.UsuarioAlta);
-        return _solicitudRepo.ObtenerSolicitudesPendientes();
+        return _UsuarioRepo.ObtenerSolicitudesPendientes();
     }
 }

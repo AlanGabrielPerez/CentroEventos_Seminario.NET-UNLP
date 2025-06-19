@@ -8,22 +8,13 @@ public class CentroEventoContext : DbContext
     public DbSet<EventoDeportivo> EventosDeportivos { get; set; }
     public DbSet<Reserva> Reservas { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<SolicitudUsuario> SolicitudesUsuario { get; set; }
     public DbSet<PermisoUsuario> PermisosUsuario { get; set; }
-    public DbSet<SolicitudReserva> SolicitudesReservas { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=CentroEventos.sqlite");
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    modelBuilder.Entity<Usuario>().ToTable("Usuarios");
-    modelBuilder.Entity<SolicitudUsuario>().ToTable("SolicitudesUsuario");
-
-    modelBuilder.Entity<Reserva>().ToTable("Reservas");
-    modelBuilder.Entity<SolicitudReserva>().ToTable("SolicitudesReservas");
-}
-
+   
 }

@@ -6,17 +6,18 @@ using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-public class CrearSolicitudReservaUseCase(
-        ISolicitudReservaRepositorio solicitudRepo,
-        ReservaValidador validador, IServicioAutorizacion auth): SolicitudReservaUseCase(solicitudRepo, auth) 
+public class CrearReservaUseCase(
+        IReservaRepositorio reservaRepo,
+        ReservaValidador validador,
+        IServicioAutorizacion auth): ReservaUseCase(reservaRepo, auth) 
     
 {
     private readonly ReservaValidador _validador = validador;
 
-    public void Ejecutar(SolicitudReserva reserva)
+    public void Ejecutar(Reserva reserva)
     {
        if (reserva == null)
-            throw new ArgumentNullException(nameof(reserva), "La reserva no puede ser nula.");
+            throw new ArgumentNullException("La reserva no puede ser nula.");
      
         if (!_validador.Validar(reserva, out string mensajeError))
             throw new ValidacionException(mensajeError);
@@ -26,8 +27,8 @@ public class CrearSolicitudReservaUseCase(
             throw new DuplicadoException(mensajeDuplicado);
 
         reserva.FechaSolicitud = DateTime.Now;
-        reserva.Estado = EstadoSolicitud.Pendiente;
+        reserva.EstadoSolicitud = EstadoSolicitud.Pendiente;
 
-        _solicitudRepo.CrearSolicitud(reserva);
+        _reservaRepo.Crear(reserva);
     }
 }

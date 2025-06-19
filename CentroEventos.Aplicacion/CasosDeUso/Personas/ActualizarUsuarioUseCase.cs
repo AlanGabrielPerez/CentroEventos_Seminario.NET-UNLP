@@ -13,8 +13,10 @@ public class ActualizarUsuarioUseCase(IUsuarioRepositorio UsuarioRepo,
 
     public void Ejecutar(Usuario Usuario, int idUsuario)
     {
-        VerificarPermiso(idUsuario, Permiso.UsuarioModificacion);
-
+        if (Usuario.Id != idUsuario)
+        {
+            VerificarPermiso(idUsuario, Permiso.UsuarioModificacion);
+        }
         if (!_validador.Validar(Usuario, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
