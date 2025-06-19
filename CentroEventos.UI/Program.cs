@@ -24,10 +24,19 @@ builder.Services.AddScoped<EventoDeportivoValidador>();
 builder.Services.AddScoped<UsuarioValidador>();
 builder.Services.AddScoped<ReservaValidador>();
 
-//casos de uso usuario
+
 builder.Services.AddScoped<LoginUseCase>();
+
+
+//casos de uso usuario
 builder.Services.AddTransient<CrearUsuarioUseCase>();
+builder.Services.AddScoped<ActualizarUsuarioUseCase>();
 builder.Services.AddScoped<ListarUsuariosUseCase>();
+builder.Services.AddScoped<ListarSolicitudesUsuarioPendientesUseCase>();
+builder.Services.AddScoped<AceptarUsuarioUseCase>();
+builder.Services.AddScoped<RechazarUsuarioUseCase>();
+builder.Services.AddScoped<EliminarUsuarioUseCase>();
+
 
 //casos de uso evento
 builder.Services.AddScoped<CrearEventoDeportivoUseCase>();

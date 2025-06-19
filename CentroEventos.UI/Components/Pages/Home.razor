@@ -31,7 +31,7 @@
 else
 {
     <p>Bienvenido @sesion.Nombre</p>
-    <a href="/crearEvento" class="btn btn-success">Ir al menú</a>
+    <button class="btn btn-danger"@onclick="CerrarSesion">Cerrar Sesion</button>
 }
 
 @code {
@@ -50,6 +50,10 @@ else
         {
             mensaje = "Credenciales inválidas o usuario no aprobado.";
         }
+    }
+
+    void CerrarSesion(){
+        sesion.CerrarSesion();
     }
 
 }

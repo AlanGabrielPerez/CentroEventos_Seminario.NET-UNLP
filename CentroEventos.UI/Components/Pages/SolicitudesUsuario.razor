@@ -1,0 +1,118 @@
+@page "/solicitudesUsuario"
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+@inject ListarSolicitudesUsuarioPendientesUseCase listarUsuarios
+@inject AceptarUsuarioUseCase aceptarUsuario
+@inject RechazarUsuarioUseCase rechazarUsuario
+
+@if (sesion.UsuarioId is null)
+{
+    <p>No estás logueado.</p>
+}
+else
+{
+    <p>Bienvenido, @sesion.Nombre</p>
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="@claseMensaje">@mensaje</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Email</th>
+            <th>ACCIÓN</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in _lista)
+        {
+            <tr>
+                <td>@user.Nombre</td>
+                <td>@user.Apellido</td>
+                <td>@user.DNI</td>
+                <td>@user.Email</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
+                    <button class="btn btn-danger"@onclick="()=>Rechazar(user.Id)">Rechazar</button>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Usuario> _lista = new List<Usuario>();
+    private int? idSesion;
+
+    private string mensaje = "";
+    private string claseMensaje = "";
+
+    protected override void OnInitialized()
+    {
+        idSesion = sesion.UsuarioId;
+        ActualizarLista();
+    }
+
+    void ActualizarLista()
+    {
+        try
+        {
+            if (idSesion is null)
+                throw new Exception("Sesión no iniciada.");
+
+            _lista = listarUsuarios.Ejecutar(idSesion.Value)?.ToList() ?? new List<Usuario>();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar la lista: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void Aceptar(int userId)
+    {
+        try
+        {
+            if (idSesion is null)
+                throw new Exception("Sesión no iniciada.");
+
+            aceptarUsuario.Ejecutar(userId, idSesion.Value);
+
+            mensaje = "Usuario aceptado correctamente.";
+            claseMensaje = "alert alert-success";
+            ActualizarLista();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void Rechazar(int userId)
+    {
+        try
+        {
+            if (idSesion is null)
+                throw new Exception("Sesión no iniciada.");
+
+            rechazarUsuario.Ejecutar(userId, idSesion.Value);
+
+            mensaje = "Usuario rechazado correctamente.";
+            claseMensaje = "alert alert-warning";
+            ActualizarLista();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+}
