@@ -1,7 +1,15 @@
 ﻿@page "/"
-
+@inject LoginUseCase loginUseCase
+@inject ISesionUsuario sesion
 @inject NavigationManager Navigation
 
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-danger">@mensaje</div>
+}
+
+@if (sesion.UsuarioId is null)
+{
     <div class="mb-3">
         <label>Email:</label>
         <input class="form-control" @bind="Email" />
@@ -12,25 +20,35 @@
         <input type="password" class="form-control" @bind="Pass" />
     </div>
 
-    <button class="btn btn-primary" @onclick= "IniciarSesion" >Iniciar Sesión</button>
+    <button class="btn btn-primary" @onclick="IniciarSesion">Iniciar Sesión</button>
 
-
-<p class="mt-3">
-    ¿No tenés una cuenta? 
-    <a href="/registro">Registrate aquí</a>
-</p>
+    <p class="mt-3">
+        ¿No tenés una cuenta?
+        <a href="/registro">Registrate aquí</a>
+    </p>
+}
+else
+{
+    <p>Bienvenido @sesion.Nombre</p>
+    <a href="/menu" class="btn btn-success">Ir al menú</a>
+}
 
 @code {
     private string? Email;
     private string? Pass;
+    private string? mensaje = null;
 
     void IniciarSesion()
     {
-        // Acá usarías login.Email y login.Contrasena
-        Console.WriteLine($"Intento de login: {Email} - {Pass}");
-
-        // redirigir si login exitoso
-        Navigation.NavigateTo("/menu"); // ejemplo
+    
+        if (loginUseCase.Ejecutar(Email!, Pass!))
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            mensaje = "Credenciales inválidas o usuario no aprobado.";
+        }
     }
 
 }

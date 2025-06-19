@@ -4,7 +4,7 @@ namespace CentroEventos.Aplicacion.Entidades;
 public class Usuario
 {
     public int Id { get; set; }
-    public string? _passwordHash { get; set; }
+    private string? _passwordHash { get; set; }
     private string? _dni;
     private string? _nombre;
     private string? _apellido;

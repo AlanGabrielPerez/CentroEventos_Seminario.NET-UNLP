@@ -1,0 +1,91 @@
+@page "/crearEvento"
+@inject ISesionUsuario sesion
+@inject ListarUsuariosUseCase listarUsuarios
+@inject CrearEventoDeportivoUseCase crearEvento
+
+
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="@claseMensaje">@mensaje</div>
+}
+
+<div class="mb-3">
+    <label>Nombre:</label>
+    <input @bind="evento.Nombre" class="form-control">
+</div>
+
+<div class="mb-3">
+    <label>Descripcion</label>
+    <input @bind="evento.Descripcion" type="password" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label>Cupo Maximo</label>
+    <input class="form-control" @bind="evento.CupoMaximo" />
+</div>
+
+<div class="mb-3">
+    <label>Responsable:</label>
+    <select class="form-control" @bind="idResponsableSeleccionado">
+        <option disabled selected value="">Seleccione un responsable</option>
+        @foreach (var usuario in usuarios)
+        {
+            <option value="@usuario.Id">@usuario.Nombre @usuario.Apellido</option>
+        }
+    </select>
+
+</div>
+
+<div class="mb-3">
+    <label>Fecha y hora de inicio:</label>
+    <InputDate @bind-Value="fechaYHoraInicio" class="form-control" />
+</div>
+
+
+<div class="mb-3">
+    <label>Horas duracion:</label>
+    <input class="form-control" @bind="evento.DuracionHoras" />
+</div>
+
+<button class="btn btn-primary" @onclick="Crear">Registrarse Evento</button>
+
+@code {
+    private EventoDeportivo evento = new EventoDeportivo();
+    private List<Usuario> usuarios = new();
+    private int idResponsableSeleccionado;
+    private DateTime fechaYHoraInicio = DateTime.Now;
+    private string mensaje = "";
+    private string claseMensaje = "";
+
+    private int? idSesion;
+    void Crear()
+    {
+        try
+        {
+            if (idSesion is null)
+                throw new Exception("Debe iniciar sesión para crear un evento.");
+
+            evento.ResponsableId = idResponsableSeleccionado;
+            evento.FechaHoraInicio = fechaYHoraInicio;
+
+            crearEvento.Ejecutar(evento, idSesion.Value); // usás .Value solo si estás seguro que no es null
+
+            mensaje = "Evento creado con éxito.";
+            claseMensaje = "alert alert-success";
+            evento = new EventoDeportivo();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+    protected override void OnInitialized()
+    {
+        idSesion = sesion.UsuarioId;
+
+        if (idSesion != null)
+            usuarios = listarUsuarios.Ejecutar(idSesion.Value)!.ToList();
+    }
+}

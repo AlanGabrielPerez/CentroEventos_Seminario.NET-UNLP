@@ -1,7 +1,5 @@
 @page "/registro"
 @rendermode InteractiveServer
-
-@using System.ComponentModel.DataAnnotations
 @inject CrearUsuarioUseCase crearUsuario
 
     @if (!string.IsNullOrEmpty(mensaje))
@@ -50,7 +48,7 @@
             
             crearUsuario.Ejecutar(usuario);
 
-            mensaje = "Registro exitoso. Espera aprobación.";
+            mensaje = "Registro exitoso.";
             claseMensaje = "alert alert-success";
 
             usuario = new Usuario();

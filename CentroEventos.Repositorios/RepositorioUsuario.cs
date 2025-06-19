@@ -27,7 +27,8 @@ public class RepositorioUsuario(CentroEventoContext context) : RepositorioDbCont
  
     public Usuario? ObtenerPorId(int id) => GetByID<Usuario>(id);
 
-    public List<Usuario>? ObtenerTodas() => GetAll<Usuario>();
+    public List<Usuario>? ObtenerTodas() =>
+        _context.Usuarios.Where(u => u.EstadoSolicitud == EstadoSolicitud.Aceptada).ToList();
 
     public List<Usuario>? ObtenerSolicitudesPendientes() => _context.Usuarios
         .Where(u => u.EstadoSolicitud == EstadoSolicitud.Pendiente)

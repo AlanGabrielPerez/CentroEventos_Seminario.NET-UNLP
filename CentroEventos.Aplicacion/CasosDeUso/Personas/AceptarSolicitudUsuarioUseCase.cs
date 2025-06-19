@@ -1,5 +1,6 @@
 using CentroEventos.Aplicacion.Enums;
 using CentroEventos.Aplicacion.Interfaces;
+using CentroEventos.Aplicacion.Entidades;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
@@ -15,6 +16,14 @@ public class AceptarUsuarioUseCase(
         if (usuario != null)
         {
             usuario.EstadoSolicitud = EstadoSolicitud.Aceptada;
+            var _permisoUsuario = new PermisoUsuario
+                {
+                    UsuarioId = id,
+                    Permiso = Permiso.Lectura
+                };
+                _auth.AgregarPermisoUsuario(_permisoUsuario);
+                usuario.Permisos.Add(_permisoUsuario);
+                
             _UsuarioRepo.Actualizar(usuario);
         }
     }

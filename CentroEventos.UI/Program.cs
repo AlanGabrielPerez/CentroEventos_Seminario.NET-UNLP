@@ -19,10 +19,21 @@ builder.Services.AddScoped<IReservaRepositorio, RepositorioReserva>();
 builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacionRepositorio>();
 builder.Services.AddScoped<ISesionUsuario, SesionUsuario>();
 
-// use cases
+//validadores
+builder.Services.AddScoped<EventoDeportivoValidador>();
 builder.Services.AddScoped<UsuarioValidador>();
-builder.Services.AddTransient<CrearUsuarioUseCase>();
+builder.Services.AddScoped<ReservaValidador>();
+
+//casos de uso usuario
 builder.Services.AddTransient<LoginUseCase>();
+builder.Services.AddTransient<CrearUsuarioUseCase>();
+builder.Services.AddTransient<ListarUsuariosUseCase>();
+
+//casos de uso evento
+builder.Services.AddTransient<CrearEventoDeportivoUseCase>();
+builder.Services.AddTransient<ListarEventosDeportivosUseCase>();
+builder.Services.AddTransient<ListarEventosConCupoDisponibleUseCase>();
+
 
 
 var app = builder.Build();

@@ -9,6 +9,8 @@ public class SesionUsuario : ISesionUsuario
     public string? Nombre { get; private set; } 
     public List<Permiso> Permisos { get; private set; } = [];
 
+    
+
     public void IniciarSesion(int usuarioId,string nombre, List<Permiso> permisos)
     {
         UsuarioId = usuarioId;
