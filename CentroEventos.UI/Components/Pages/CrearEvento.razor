@@ -1,8 +1,18 @@
 @page "/crearEvento"
+@rendermode InteractiveServer
 @inject ISesionUsuario sesion
 @inject ListarUsuariosUseCase listarUsuarios
 @inject CrearEventoDeportivoUseCase crearEvento
 
+
+@if (sesion.UsuarioId is null)
+{
+    <p>No estás logueado.</p>
+}
+else
+{
+    <p>Bienvenido, @sesion.Nombre</p>
+}
 
 
 @if (!string.IsNullOrEmpty(mensaje))
@@ -17,7 +27,7 @@
 
 <div class="mb-3">
     <label>Descripcion</label>
-    <input @bind="evento.Descripcion" type="password" class="form-control" />
+    <input @bind="evento.Descripcion" class="form-control" />
 </div>
 
 <div class="mb-3">
