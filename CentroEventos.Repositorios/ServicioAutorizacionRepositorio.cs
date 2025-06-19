@@ -17,6 +17,6 @@ public class ServicioAutorizacionRepositorio(CentroEventoContext context) : Repo
 
     public bool PoseeElPermiso(int idUsuario, Permiso permiso)
     {
-        return _context.PermisosUsuario.Any(p => p.PersonaId == idUsuario && p.Permiso == permiso);
+        return _context.PermisosUsuario.Any(p => p.UsuarioId == idUsuario && p.Permiso == permiso);
     }
 }

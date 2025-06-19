@@ -18,8 +18,12 @@ public class CrearSolicitudReservaUseCase(
        if (reserva == null)
             throw new ArgumentNullException(nameof(reserva), "La reserva no puede ser nula.");
      
-       if (!_validador.Validar(out string mensajeError))
+        if (!_validador.Validar(reserva, out string mensajeError))
             throw new ValidacionException(mensajeError);
+        if (!_validador.ValidarCupo(reserva, out string mensajeCupo))
+            throw new CupoExcedidoException(mensajeCupo);
+        if (!_validador.ValidarDuplicado(reserva, out string mensajeDuplicado))
+            throw new DuplicadoException(mensajeDuplicado);
 
         reserva.FechaSolicitud = DateTime.Now;
         reserva.Estado = EstadoSolicitud.Pendiente;

@@ -4,12 +4,10 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.Validadores;
 
-public class EventoDeportivoValidador(
-        EventoDeportivo evento,
-        IUsuarioRepositorio UsuarioRepo)
+public class EventoDeportivoValidador(IUsuarioRepositorio UsuarioRepo)
 {
     private readonly IUsuarioRepositorio _usuarioRepo = UsuarioRepo;
-    public bool Validar(out string mensajeError)
+    public bool Validar(EventoDeportivo evento,out string mensajeError)
     {
         mensajeError = "";
 

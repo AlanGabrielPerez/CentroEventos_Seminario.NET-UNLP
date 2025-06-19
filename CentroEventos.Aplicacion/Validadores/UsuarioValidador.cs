@@ -3,13 +3,11 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.Validadores;
 
-public class UsuarioValidador(Usuario Usuario,
-        IUsuarioRepositorio UsuarioRepo)
+public class UsuarioValidador(IUsuarioRepositorio UsuarioRepo)
 {
     private readonly IUsuarioRepositorio _usuarioRepo = UsuarioRepo;
 
-    public bool Validar(
-        
+    public bool Validar(Usuario Usuario,       
         out string mensajeError)
     {
         mensajeError = "";
@@ -32,7 +30,7 @@ public class UsuarioValidador(Usuario Usuario,
         return string.IsNullOrEmpty(mensajeError);
     }
 
-    public bool ValidarDuplicados(out string mensajeError)
+    public bool ValidarDuplicados(Usuario Usuario, out string mensajeError)
     {
         mensajeError = "";
 

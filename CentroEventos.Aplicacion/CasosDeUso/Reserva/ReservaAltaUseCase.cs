@@ -17,11 +17,11 @@ public class ReservaAltaUseCase(
     {
         
         VerificarPermiso(idUsuario, Permiso.ReservaAlta);
-        if (_validador.Validar(out string mensajeError))
+        if (_validador.Validar(reserva,out string mensajeError))
             throw new EntidadNotFoundException($"No existe el evento con ID {reserva.EventoDeportivoId}.");
-        if (_validador.ValidarCupo(out string mensajeCupo))
+        if (_validador.ValidarCupo(reserva, out string mensajeCupo))
             throw new CupoExcedidoException("El evento no tiene cupo disponible.");
-        if (_validador.ValidarDuplicado(out string mensajeDuplicado))
+        if (_validador.ValidarDuplicado(reserva, out string mensajeDuplicado))
             throw new DuplicadoException("La Usuario ya tiene una reserva para este evento");
 
         reserva.FechaAltaReserva = DateTime.Now;

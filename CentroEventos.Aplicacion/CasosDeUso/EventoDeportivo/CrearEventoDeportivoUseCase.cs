@@ -23,7 +23,7 @@ public class CrearEventoDeportivoUseCase(
         if (usuario == null)
             throw new EntidadNotFoundException($"Usuario con ID {evento.ResponsableId} no encontrado.");
 
-        if (!_validador.Validar(out string mensajeError))
+        if (!_validador.Validar(evento, out string mensajeError))
             throw new ValidacionException(mensajeError);
 
         evento.Responsable = usuario;

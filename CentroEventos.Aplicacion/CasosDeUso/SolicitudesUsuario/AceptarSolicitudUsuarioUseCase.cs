@@ -16,7 +16,7 @@ public class AceptarSolicitudUsuarioUseCase(
         var solicitud = _solicitudRepo.ObtenerPorId(id);
         if (solicitud == null)
             throw new KeyNotFoundException($"No se encontró una solicitud con el ID {id}.");
-
+        
         var usuario = new Usuario
         {
             Nombre = solicitud.Nombre,
@@ -34,7 +34,8 @@ public class AceptarSolicitudUsuarioUseCase(
         catch (Exception ex)
         {
             Console.WriteLine($"Error al crear usuario: {ex.Message}");
-            solicitud.Estado = EstadoSolicitud.Rechazada;  
+            solicitud.Estado = EstadoSolicitud.Rechazada;
+            
         }
 
         _solicitudRepo.ActualizarSolicitud(solicitud);

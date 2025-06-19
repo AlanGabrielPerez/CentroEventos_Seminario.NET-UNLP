@@ -1,9 +1,15 @@
 @page "/registro"
 @using System.ComponentModel.DataAnnotations
+@inject CrearSolicitudUsuarioUseCase crearSolicitudUsuario
 
-<EditForm Model="@usuario" OnValidSubmit="Registrar">
+<EditForm Model="@usuario" OnValidSubmit="Registrar" FormName="formRegistro">
     <DataAnnotationsValidator />
     <ValidationSummary />
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="@claseMensaje">@mensaje</div>
+    }
 
     <div class="mb-3">
         <label>Email:</label>
@@ -39,12 +45,28 @@
 </EditForm>
 
 @code {
-    private Usuario usuario = new Usuario();
+    private SolicitudUsuario usuario = new SolicitudUsuario();
+  
+    private string mensaje = "";
+    private string claseMensaje = "";
 
-   void Registrar()
+    private void Registrar()
     {
-        // Aquí se llamaría al servicio para registrar al usuario
-        // Por ejemplo: await usuarioService.Registrar(usuario);
-        Console.WriteLine("Usuario registrado: " + usuario.Email);
+        try
+        {
+            
+            crearSolicitudUsuario.Ejecutar(usuario);
+
+            mensaje = "Registro exitoso. Espera aprobación.";
+            claseMensaje = "alert alert-success";
+
+            usuario = new SolicitudUsuario();
+        
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
     }
 }

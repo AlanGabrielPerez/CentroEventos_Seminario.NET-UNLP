@@ -4,7 +4,6 @@ using CentroEventos.Aplicacion.Interfaces;
 namespace CentroEventos.Aplicacion.Validadores;
 
 public class ReservaValidador(
-        Reserva reserva,
         IUsuarioRepositorio UsuarioRepo,
         IEventoDeportivoRepositorio eventoRepo,
         IReservaRepositorio reservaRepo)
@@ -13,7 +12,7 @@ public class ReservaValidador(
     private readonly IEventoDeportivoRepositorio _eventoRepo = eventoRepo;
     private readonly IReservaRepositorio _reservaRepo = reservaRepo;
 
-    public bool Validar(out string mensajeError)
+    public bool Validar(Reserva reserva, out string mensajeError)
     {
         mensajeError = "";
 
@@ -27,7 +26,7 @@ public class ReservaValidador(
         return string.IsNullOrEmpty(mensajeError);
     }
 
-    public bool ValidarCupo(out string mensajeError)
+    public bool ValidarCupo(Reserva reserva,out string mensajeError)
     {
         mensajeError = "";
         var evento = _eventoRepo.ObtenerPorId(reserva.EventoDeportivoId);
@@ -40,7 +39,7 @@ public class ReservaValidador(
         return string.IsNullOrEmpty(mensajeError);
     }
     
-    public bool ValidarDuplicado(out string mensajeError)
+    public bool ValidarDuplicado(Reserva reserva,out string mensajeError)
     {
         mensajeError = "";
         if (_reservaRepo.ExisteReserva(reserva.UsuarioId, reserva.EventoDeportivoId))

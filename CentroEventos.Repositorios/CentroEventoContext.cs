@@ -17,4 +17,13 @@ public class CentroEventoContext : DbContext
         optionsBuilder.UseSqlite("Data Source=CentroEventos.sqlite");
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Usuario>().ToTable("Usuarios");
+    modelBuilder.Entity<SolicitudUsuario>().ToTable("SolicitudesUsuario");
+
+    modelBuilder.Entity<Reserva>().ToTable("Reservas");
+    modelBuilder.Entity<SolicitudReserva>().ToTable("SolicitudesReservas");
+}
+
 }

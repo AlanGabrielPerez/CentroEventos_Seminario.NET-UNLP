@@ -1,4 +1,6 @@
+using CentroEventos.Aplicacion.CasosDeUso;
 using CentroEventos.Aplicacion.Interfaces;
+using CentroEventos.Aplicacion.Validadores;
 using CentroEventos.Repositorios;
 using CentroEventos.UI.Components;
 
@@ -8,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<CentroEventoContext>();
+builder.Services.AddScoped<CentroEventoContext>();
 builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
 builder.Services.AddScoped<IEventoDeportivoRepositorio, RepositorioEventoDeportivo>();
 builder.Services.AddScoped<IReservaRepositorio, RepositorioReserva>();
@@ -16,7 +18,9 @@ builder.Services.AddScoped<ISolicitudUsuarioRepositorio, RepositorioSolicitudUsu
 builder.Services.AddScoped<ISolicitudReservaRepositorio, RepositorioSolicitudReserva>();
 builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacionRepositorio>();
 
-
+// use cases
+builder.Services.AddScoped<UsuarioValidador>();
+builder.Services.AddTransient<CrearSolicitudUsuarioUseCase>();
 
 
 var app = builder.Build();
@@ -32,5 +36,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+
+CentroEventosDbInitializer.Inicializar();
 
 app.Run();

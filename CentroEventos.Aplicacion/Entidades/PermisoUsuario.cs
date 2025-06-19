@@ -3,9 +3,11 @@ using CentroEventos.Aplicacion.Enums;
 namespace CentroEventos.Aplicacion.Entidades;
 
 public class PermisoUsuario
+
 {
-    public int PersonaId { get; set; }
+    public int Id { get; set; }
+    public int UsuarioId { get; set; }
     public Permiso Permiso { get; set; }
-    public Usuario Persona { get; set; } = null!;
+    public Usuario Usuario { get; set; } = null!;
 
 } 
