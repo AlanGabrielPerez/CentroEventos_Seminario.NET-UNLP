@@ -1,0 +1,69 @@
+@page "/detalleEvento/{EventoId:int}"
+@rendermode InteractiveServer
+@inject ObtenerEventoUseCase obtenerEvento 
+@inject ISesionUsuario sesion
+
+@if (sesion.UsuarioId is null)
+{
+    <p>No estás logueado.</p>
+}
+else
+{
+    <p>Bienvenido, @sesion.Nombre</p>
+}
+
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="@claseMensaje">@mensaje</div>
+}
+
+<h3>Detalle del Evento</h3>
+
+@if (evento is null)
+{
+    <p class="text-danger">No se encontró el evento.</p>
+}
+else
+{
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">@evento.Nombre</dd>
+
+        <dt class="col-sm-3">Fecha:</dt>
+        <dd class="col-sm-9">@evento.FechaHoraInicio</dd>
+
+        <dt class="col-sm-3">Duración:</dt>
+        <dd class="col-sm-9">@evento.DuracionHoras horas</dd>
+
+        <dt class="col-sm-3">Cupo disponible:</dt>
+        <dd class="col-sm-9">@evento.CupoMaximo</dd>
+
+        <dt class="col-sm-3">Descripción:</dt>
+        <dd class="col-sm-9">@evento.Descripcion</dd>
+    </dl>
+
+    <a href="/eventosDisponibles" class="btn btn-secondary">Volver</a>
+}
+
+
+
+@code {
+    public int EventoId { get; set; }
+    private EventoDeportivo? evento;
+    private string mensaje = "";
+    private string claseMensaje = "";
+
+    private int? idSesion;
+
+    protected override void OnInitialized()
+    {
+        if (sesion.UsuarioId is null)
+        {
+            evento = null;
+            return;
+        }
+
+        evento = obtenerEvento.Ejecutar(EventoId,idSesion!.Value);
+    }
+}

@@ -42,8 +42,13 @@ builder.Services.AddScoped<EliminarUsuarioUseCase>();
 builder.Services.AddScoped<CrearEventoDeportivoUseCase>();
 builder.Services.AddScoped<ListarEventosDeportivosUseCase>();
 builder.Services.AddScoped<ListarEventosConCupoDisponibleUseCase>();
+//builder.Services.AddScoped<ObtenerEventoUseCase>();
 
-
+//casos de uso reserva
+builder.Services.AddScoped<CrearReservaUseCase>();
+builder.Services.AddScoped<ReservaAltaUseCase>();
+builder.Services.AddScoped<ListarReservasUseCase>();
+builder.Services.AddScoped<ListarSolicitudesReservaPendientesUseCase>();
 
 var app = builder.Build();
 

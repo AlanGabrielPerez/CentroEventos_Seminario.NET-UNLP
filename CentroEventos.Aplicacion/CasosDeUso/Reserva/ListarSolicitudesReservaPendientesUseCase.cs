@@ -4,7 +4,7 @@ using CentroEventos.Aplicacion.Interfaces;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-class ListarSolicitudesReservaPendientesUseCase(
+public class ListarSolicitudesReservaPendientesUseCase(
     IReservaRepositorio reservaRepo, IServicioAutorizacion auth) : ReservaUseCase(reservaRepo, auth)
 {
     
