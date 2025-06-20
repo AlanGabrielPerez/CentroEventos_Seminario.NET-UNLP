@@ -3,7 +3,7 @@ using CentroEventos.Aplicacion.Enums;
 
 namespace CentroEventos.Aplicacion.CasosDeUso;
 
-class RechazarSolicitudReservaUseCase(
+public class RechazarSolicitudReservaUseCase(
     IReservaRepositorio reservaRepo,
     IServicioAutorizacion auth) : ReservaUseCase(reservaRepo, auth)
 {

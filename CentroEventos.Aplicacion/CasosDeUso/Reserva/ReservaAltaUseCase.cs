@@ -13,22 +13,25 @@ public class ReservaAltaUseCase(
 
     private readonly ReservaValidador _validador = validador;
 
-    public void Ejecutar(Reserva reserva, int idUsuario)
+    public void Ejecutar(int id, int idUsuario)
     {
-        
-        VerificarPermiso(idUsuario, Permiso.ReservaAlta);
-        if (_validador.Validar(reserva,out string mensajeError))
-            throw new EntidadNotFoundException($"No existe el evento con ID {reserva.EventoDeportivoId}.");
-        if (_validador.ValidarCupo(reserva, out string mensajeCupo))
-            throw new CupoExcedidoException("El evento no tiene cupo disponible.");
-        if (_validador.ValidarDuplicado(reserva, out string mensajeDuplicado))
-            throw new DuplicadoException("La Usuario ya tiene una reserva para este evento");
+        var reserva = _reservaRepo.ObtenerPorId(id);
+        if (reserva != null)
+        {
+            VerificarPermiso(idUsuario, Permiso.ReservaAlta);
+            if (_validador.Validar(reserva, out string mensajeError))
+                throw new EntidadNotFoundException($"No existe el evento con ID {reserva.EventoDeportivoId}.");
+            if (_validador.ValidarCupo(reserva, out string mensajeCupo))
+                throw new CupoExcedidoException("El evento no tiene cupo disponible.");
+            if (_validador.ValidarDuplicado(reserva, out string mensajeDuplicado))
+                throw new DuplicadoException("La Usuario ya tiene una reserva para este evento");
 
-        reserva.EstadoSolicitud = EstadoSolicitud.Aceptada;
-       
-        reserva.FechaAltaReserva = DateTime.Now;
-        reserva.EstadoAsistencia = EstadoAsistencia.Pendiente;
+            reserva.EstadoSolicitud = EstadoSolicitud.Aceptada;
 
-        _reservaRepo.Crear(reserva);
+            reserva.FechaAltaReserva = DateTime.Now;
+            reserva.EstadoAsistencia = EstadoAsistencia.Pendiente;
+
+            _reservaRepo.Crear(reserva);
+        }
     }
 }
