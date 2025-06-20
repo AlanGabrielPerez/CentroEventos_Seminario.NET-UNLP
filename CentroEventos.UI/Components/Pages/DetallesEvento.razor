@@ -49,6 +49,7 @@ else
 
 
 @code {
+    [Parameter]
     public int EventoId { get; set; }
     private EventoDeportivo? evento;
     private string mensaje = "";
@@ -63,6 +64,7 @@ else
             evento = null;
             return;
         }
+        idSesion = sesion.UsuarioId;
 
         evento = obtenerEvento.Ejecutar(EventoId,idSesion!.Value);
     }
