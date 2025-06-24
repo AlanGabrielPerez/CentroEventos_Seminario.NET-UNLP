@@ -37,6 +37,10 @@ builder.Services.AddScoped<AceptarUsuarioUseCase>();
 builder.Services.AddScoped<RechazarUsuarioUseCase>();
 builder.Services.AddScoped<EliminarUsuarioUseCase>();
 
+//casos de uso permisos
+builder.Services.AddScoped<OtorgarPermisoUseCase>();
+builder.Services.AddScoped<EliminarPermisoUseCase>();
+builder.Services.AddScoped<VerificarPermisosUseCase>();
 
 //casos de uso evento
 builder.Services.AddScoped<CrearEventoDeportivoUseCase>();

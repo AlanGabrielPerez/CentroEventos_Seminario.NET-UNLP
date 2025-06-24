@@ -3,6 +3,7 @@ using CentroEventos.Aplicacion.Enums;
 using CentroEventos.Aplicacion.Entidades;
 
 namespace CentroEventos.Repositorios;
+
 public class ServicioAutorizacionRepositorio(CentroEventoContext context) : RepositorioDbContext(context), IServicioAutorizacion
 {
 
@@ -19,4 +20,13 @@ public class ServicioAutorizacionRepositorio(CentroEventoContext context) : Repo
     {
         return _context.PermisosUsuario.Any(p => p.UsuarioId == idUsuario && p.Permiso == permiso);
     }
+
+    public PermisoUsuario? ObtenerPermisoPorId(int idPermisoUsuario) => GetByID<PermisoUsuario>(idPermisoUsuario);
+    
+    public int ObtenerIdPorUsuarioYPermiso(int idUsuario, Permiso permiso) =>
+        _context.PermisosUsuario
+            .Where(p => p.UsuarioId == idUsuario && p.Permiso == permiso)
+            .Select(p => p.Id)
+            .FirstOrDefault();
+
 }

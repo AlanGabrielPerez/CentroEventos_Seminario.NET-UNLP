@@ -11,5 +11,6 @@ public enum Permiso
     UsuarioAlta,
     UsuarioModificacion,
     UsuarioBaja,
-    Lectura
+    Lectura,
+    Administrador
 }

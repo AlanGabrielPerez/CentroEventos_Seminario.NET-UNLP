@@ -29,6 +29,7 @@ public class CrearUsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioAutor
 
             var permisos = new[]
             {
+                Permiso.Administrador,
                 Permiso.Lectura,
                 Permiso.UsuarioAlta,
                 Permiso.UsuarioBaja,

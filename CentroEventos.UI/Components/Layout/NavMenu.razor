@@ -1,4 +1,11 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@rendermode InteractiveServer
+@inject LoginUseCase loginUseCase
+@inject ISesionUsuario sesion
+@inject VerificarPermisosUseCase verificarPermiso
+@inject NavigationManager Navigation
+
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">CentroEventos.UI</a>
     </div>
@@ -13,30 +20,82 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-<!--
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
--->
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="eventosDisponibles">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Eventos Disponibles
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="solicitudesUsuario">
-            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Solicitudes Usuario
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="crearEvento">
-            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Crear Evento
-            </NavLink>
-        </div>
+
+        @if (sesion.UsuarioId == null)
+        {
+             <div class="nav-item px-3">
+                <input @bind="email" placeholder="Email" />
+                <input @bind="password" type="password" placeholder="Contraseña" />
+                <button @onclick="IniciarSesion">Iniciar Sesión</button>
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="alert alert-danger">@mensaje</div>
+                }
+            </div>
+        }
+        else
+        {  
+            <div class="nav-item px-3">
+            <p style="color: white;"> Bienvenido @sesion.Nombre</p>
+            <button @onclick="CerrarSesion">Cerrar Sesión</button>
+            </div>
+            <!--
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="counter">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                </NavLink>
+            </div>
+    -->
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="eventosDisponibles">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Eventos Disponibles
+                    </NavLink>
+                </div>
+
+                @if (verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.UsuarioAlta))
+                {
+                    <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="solicitudesUsuario">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Solicitudes Usuario
+                    </NavLink>
+                    </div>
+                }
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="crearEvento">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Crear Evento
+                    </NavLink>
+                </div>
+       
+    
+        }
     </nav>
 </div>
 
+
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string? mensaje;
+
+    private void IniciarSesion()
+    {
+        if (loginUseCase.Ejecutar(email, password))
+        {
+            mensaje = null;
+        }
+        else
+        {   
+            password = string.Empty;
+            mensaje = "Credenciales invalidas.";
+        }
+    }
+
+    private void CerrarSesion()
+    {
+        sesion.CerrarSesion();
+        email = string.Empty;
+        password = string.Empty;
+    }
+}
