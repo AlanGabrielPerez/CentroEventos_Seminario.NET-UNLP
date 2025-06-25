@@ -36,6 +36,7 @@ builder.Services.AddScoped<ListarSolicitudesUsuarioPendientesUseCase>();
 builder.Services.AddScoped<AceptarUsuarioUseCase>();
 builder.Services.AddScoped<RechazarUsuarioUseCase>();
 builder.Services.AddScoped<EliminarUsuarioUseCase>();
+builder.Services.AddScoped<ObtenerUsuarioUseCase>();
 
 //casos de uso permisos
 builder.Services.AddScoped<OtorgarPermisoUseCase>();
@@ -50,9 +51,11 @@ builder.Services.AddScoped<ObtenerEventoUseCase>();
 
 //casos de uso reserva
 builder.Services.AddScoped<CrearReservaUseCase>();
-builder.Services.AddScoped<ReservaAltaUseCase>();
+builder.Services.AddScoped<ReservaAltaUseCase>(); 
 builder.Services.AddScoped<ListarReservasUseCase>();
 builder.Services.AddScoped<ListarSolicitudesReservaPendientesUseCase>();
+builder.Services.AddScoped<ListarReservasAprobadasUseCase>();
+builder.Services.AddScoped<RechazarSolicitudReservaUseCase>();
 
 var app = builder.Build();
 
@@ -63,7 +66,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-app.UseAntiforgery();
+app.UseAntiforgery(); 
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

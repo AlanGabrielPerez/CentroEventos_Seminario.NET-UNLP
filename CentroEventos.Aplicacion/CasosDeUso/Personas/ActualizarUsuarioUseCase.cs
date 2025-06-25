@@ -11,11 +11,11 @@ public class ActualizarUsuarioUseCase(IUsuarioRepositorio UsuarioRepo,
 {
     private readonly UsuarioValidador _validador = validador;
 
-    public void Ejecutar(Usuario Usuario, int idUsuario)
+    public void Ejecutar(Usuario Usuario, int idSesion)
     {
-        if (Usuario.Id != idUsuario)
+        if (Usuario.Id != idSesion)
         {
-            VerificarPermiso(idUsuario, Permiso.UsuarioModificacion);
+            VerificarPermiso(idSesion, Permiso.UsuarioModificacion);
         }
         if (!_validador.Validar(Usuario, out string mensajeError))
             throw new ValidacionException(mensajeError);

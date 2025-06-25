@@ -12,11 +12,13 @@
 
 @code{
     private bool visible = false;
-    [Parameter]  public string Mensaje {get;set;}="";
+    private string Mensaje ="";
+
     [Parameter]  public EventCallback OnConfirmado{get;set;}
 
-    public void Mostrar()
+    public void Mostrar(string mensajeConfirmacion)
     {
+        Mensaje=mensajeConfirmacion;
         visible=true;
         StateHasChanged();
     }

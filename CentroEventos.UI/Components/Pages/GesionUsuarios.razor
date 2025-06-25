@@ -1,0 +1,136 @@
+@page "/gestionUsuarios"
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+@inject ListarUsuariosUseCase listarUsuarios
+@inject EliminarUsuarioUseCase eliminarUsuario
+@inject ActualizarUsuarioUseCase actualizarUsuario
+@inject NavigationManager Navigation
+@inject VerificarPermisosUseCase verificarPermiso
+
+<DialogoEditarUsuario @ref="dialogoEditar" OnConfirmado="ActualizarListaUsuarios" />
+
+<DialogoConfirmacion @ref="dialogo" OnConfirmado="Eliminar"/>
+
+@if (sesion.UsuarioId == null)
+{
+    <p>No estás logueado.</p>
+}
+else
+{
+    <p>Bienvenido, @sesion.Nombre</p>
+}
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="@claseMensaje">@mensaje</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Email</th>
+            <th>ACCIÓN</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in _lista)
+        {
+            <tr>
+                <td>@user.Nombre</td>
+                <td>@user.Apellido</td>
+                <td>@user.DNI</td>
+                <td>@user.Email</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => Editar(user.Id)">Editar</button>
+                    <button class="btn btn-danger"@onclick="()=>ConfirmarEliminacion(user)">Eliminar</button>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    DialogoEditarUsuario dialogoEditar = null!;
+    DialogoConfirmacion dialogo = null!;
+    
+    private Usuario? _usuarioAEliminar = null;
+    private List<Usuario> _lista = new List<Usuario>();
+
+    int idSesion ;
+    private string mensaje = "";
+    private string claseMensaje = "alert alert-info";
+
+    protected override void OnInitialized()
+    {
+        if (sesion.UsuarioId != null)
+        {
+            idSesion = sesion.UsuarioId.Value;
+            ActualizarListaUsuarios();
+        }
+        else
+        {
+            mensaje = "No estás logueado.";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    private void ConfirmarEliminacion(Usuario u)
+    {
+        _usuarioAEliminar = u;
+        dialogo.Mostrar($"¿Desea eliminar al usuario {u.Nombre} {u.Apellido}?");
+    }
+    void Eliminar()
+    {
+        try
+        {
+            if (_usuarioAEliminar != null)
+            {
+                int id = _usuarioAEliminar.Id;   
+                eliminarUsuario.Ejecutar(id,idSesion);
+                mensaje = "Usuario eliminado.";
+                claseMensaje = "alert alert-success";
+                ActualizarListaUsuarios();
+            }else
+            {
+                mensaje = "No se ha seleccionado ningún usuario para eliminar.";
+                claseMensaje = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void Editar(int id)
+    {
+        try
+        {           
+            dialogoEditar.Mostrar(id);
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al editar el usuario: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void ActualizarListaUsuarios()
+    {
+        try
+        {
+            _lista = listarUsuarios.Ejecutar(idSesion) ?? new List<Usuario>();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar la lista: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+}

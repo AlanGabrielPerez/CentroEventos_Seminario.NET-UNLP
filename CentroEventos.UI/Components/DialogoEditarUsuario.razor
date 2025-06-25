@@ -32,19 +32,16 @@
 
 @code {
     private bool visible = false;
-
-    [Parameter] public int UsuarioId { get; set; }
+    private Usuario? usuario;
 
     [Parameter] public EventCallback OnConfirmado { get; set; }
 
     [Inject] public ObtenerUsuarioUseCase ObtenerUsuarioUseCase { get; set; } = null!;
     [Inject] public ActualizarUsuarioUseCase ActualizarUsuarioUseCase { get; set; } = null!;
 
-    private Usuario? usuario;
-
-    public void Mostrar()
+    public void Mostrar(int idUsuario)
     {
-        usuario = ObtenerUsuarioUseCase.Ejecutar(UsuarioId,sesion.UsuarioId!.Value);
+        usuario = ObtenerUsuarioUseCase.Ejecutar(idUsuario, sesion.UsuarioId!.Value);
         visible = true;
         StateHasChanged();
     }
@@ -58,7 +55,7 @@
     {
         if (usuario != null)
         {
-            ActualizarUsuarioUseCase.Ejecutar(usuario,sesion.UsuarioId!.Value);
+            ActualizarUsuarioUseCase.Ejecutar(usuario, sesion.UsuarioId!.Value);
             OnConfirmado.InvokeAsync();
         }
         visible = false;
