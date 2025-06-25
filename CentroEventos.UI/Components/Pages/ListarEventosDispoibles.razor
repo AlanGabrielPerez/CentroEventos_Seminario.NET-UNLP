@@ -4,7 +4,7 @@
 @inject ListarEventosConCupoDisponibleUseCase eventosDisponibles
 @inject CrearReservaUseCase solicitarReserva
 
-@if (sesion.UsuarioId is null)
+@if (sesion.UsuarioId == null)
 {
     <p>No estás logueado.</p>
 }
@@ -86,7 +86,7 @@ else
         try
         {
             reserva.EventoDeportivoId = idEvento;
-            reserva.UsuarioId = idSesion.Value;
+            reserva.UsuarioId = idSesion!.Value;
 
             solicitarReserva.Ejecutar(reserva);
             mensaje = "Reserva solicitada.";
@@ -95,7 +95,7 @@ else
         }
         catch (Exception ex)
         {
-            mensaje = $"Error al cargar la lista: {ex.Message}";
+            mensaje = $"Error: {ex.Message}";
             claseMensaje = "alert alert-danger";
         }
     }

@@ -1,21 +1,21 @@
 @page "/detalleEvento/{EventoId:int}"
 @rendermode InteractiveServer
-@inject ObtenerEventoUseCase obtenerEvento 
+@inject ObtenerEventoUseCase obtenerEvento
+@inject ListarSolicitudesReservaPendientesUseCase solicitudesReserva
+@inject ListarReservasAprobadasUseCase reservasAprobadas
+@inject ReservaAltaUseCase reservaAlta
+@inject RechazarSolicitudReservaUseCase rechazarReserva
+@inject ObtenerUsuarioUseCase obtenerUsuario
+@inject VerificarPermisosUseCase verificarPermiso
 @inject ISesionUsuario sesion
 
-@if (sesion.UsuarioId is null)
+@if (sesion.UsuarioId == null)
 {
     <p>No estás logueado.</p>
 }
 else
 {
     <p>Bienvenido, @sesion.Nombre</p>
-}
-
-
-@if (!string.IsNullOrEmpty(mensaje))
-{
-    <div class="@claseMensaje">@mensaje</div>
 }
 
 <h3>Detalle del Evento</h3>
@@ -26,6 +26,7 @@ else
 }
 else
 {
+
     <dl class="row">
         <dt class="col-sm-3">Nombre:</dt>
         <dd class="col-sm-9">@evento.Nombre</dd>
@@ -42,6 +43,81 @@ else
         <dt class="col-sm-3">Descripción:</dt>
         <dd class="col-sm-9">@evento.Descripcion</dd>
     </dl>
+    <hr>
+
+    <h4>Reservas</h4>
+    @if (!string.IsNullOrEmpty(msj))
+    {
+        <p class="text-danger">@msj</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in _listaReservado)
+                {
+                    <tr>
+                        <td>@user.Nombre</td>
+                        <td>@user.Apellido</td>
+                        <td>@user.Email</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (verificarPermiso.Ejecutar(sesion.UsuarioId!.Value, Permiso.ReservaAlta))
+    {
+
+        <hr>
+        <h4>Solicitudes de Reserva</h4>
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="@claseMensaje">@mensaje</div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Cod. Reserva</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var solicitud in _listaSolicitudes)
+                    {
+                        var u = obtenerUsuario.Ejecutar(solicitud.UsuarioId, idSesion!.Value);
+                        @if (u != null)
+                        {
+                            <tr>
+                                <td>@u.Nombre</td>
+                                <td>@u.Nombre</td>
+                                <td>@u.Apellido</td>
+                                <td>@u.Email</td>
+                                <td>
+                                    <button class="btn btn-primary" @onclick="() => AceptarReserva(solicitud.Id)">Aceptar</button>
+                                    <button class="btn btn-danger" @onclick="() => RechazarReserva(solicitud.Id)">Rechazar</button>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        }
+    }
 
     <a href="/eventosDisponibles" class="btn btn-secondary">Volver</a>
 }
@@ -52,20 +128,97 @@ else
     [Parameter]
     public int EventoId { get; set; }
     private EventoDeportivo? evento;
+
+    private List<Reserva> reservas = new List<Reserva>();
+    private List<Usuario> _listaReservado = new List<Usuario>();
+    private List<Reserva> _listaSolicitudes = new List<Reserva>();
     private string mensaje = "";
     private string claseMensaje = "";
-
+    private string msj = "";
     private int? idSesion;
 
     protected override void OnInitialized()
     {
-        if (sesion.UsuarioId is null)
+        if (sesion.UsuarioId == null)
         {
             evento = null;
             return;
         }
         idSesion = sesion.UsuarioId;
 
-        evento = obtenerEvento.Ejecutar(EventoId,idSesion!.Value);
+        evento = obtenerEvento.Ejecutar(EventoId, idSesion!.Value);
+        ActualizarListaReservas();
+        if (verificarPermiso.Ejecutar(sesion.UsuarioId!.Value, Permiso.ReservaAlta))
+            ActualizarListaSolicitudes(); 
+        
     }
+
+    void ActualizarListaReservas()
+    {
+        reservas = reservasAprobadas.Ejecutar(EventoId, idSesion!.Value);
+        if (reservas.Count == 0)
+        {
+            msj = "No hay reservas aprobadas para este evento.";
+        }
+        else
+        {
+            msj = "";
+            foreach (var reserva in reservas)
+            {
+                var usuario = obtenerUsuario.Ejecutar(reserva.UsuarioId, idSesion!.Value);
+                if (usuario != null)
+                    _listaReservado.Add(usuario);
+
+            }
+        }
+    }
+
+    void ActualizarListaSolicitudes()
+    {
+        _listaSolicitudes = solicitudesReserva.Ejecutar(EventoId, idSesion!.Value);
+        if (_listaSolicitudes.Count == 0)
+        {
+            mensaje = "No hay solicitudes de reserva pendientes.";
+            claseMensaje = "alert alert-info";
+        }
+        else
+        {
+            mensaje = "";
+            claseMensaje = "";
+        }
+    }
+
+    void AceptarReserva(int reservaId)
+    {
+        try
+        {
+            reservaAlta.Ejecutar(reservaId, idSesion!.Value);
+            mensaje = "Reserva aceptada.";
+            claseMensaje = "alert alert-success";
+            ActualizarListaReservas();
+            ActualizarListaSolicitudes();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al aceptar la reserva: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void RechazarReserva(int reservaId)
+    {
+        try
+        {
+            rechazarReserva.Ejecutar(reservaId, idSesion!.Value);
+            mensaje = "Reserva rechazada.";
+            claseMensaje = "alert alert-success";
+            ActualizarListaSolicitudes();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al rechazar la reserva: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
 }
