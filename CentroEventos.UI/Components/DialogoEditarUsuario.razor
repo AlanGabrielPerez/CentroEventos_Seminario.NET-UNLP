@@ -1,0 +1,66 @@
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+
+@if (visible && usuario != null)
+{
+    <div class="dialogo-contenedor">
+        <div class="dialogo-contenido">
+            <h3>Editar Usuario</h3>
+
+            <div class="mb-3">
+                <label>Nombre:</label>
+                <input class="form-control" @bind="usuario.Nombre" />
+            </div>
+
+            <div class="mb-3">
+                <label>Apellido:</label>
+                <input class="form-control" @bind="usuario.Apellido" />
+            </div>
+
+            <div class="mb-3">
+                <label>Email:</label>
+                <input class="form-control" @bind="usuario.Email" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary me-2" @onclick="Cerrar">Cancelar</button>
+                <button class="btn btn-primary" @onclick="CerrarYConfirmar">Guardar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool visible = false;
+
+    [Parameter] public int UsuarioId { get; set; }
+
+    [Parameter] public EventCallback OnConfirmado { get; set; }
+
+    [Inject] public ObtenerUsuarioUseCase ObtenerUsuarioUseCase { get; set; } = null!;
+    [Inject] public ActualizarUsuarioUseCase ActualizarUsuarioUseCase { get; set; } = null!;
+
+    private Usuario? usuario;
+
+    public void Mostrar()
+    {
+        usuario = ObtenerUsuarioUseCase.Ejecutar(UsuarioId,sesion.UsuarioId!.Value);
+        visible = true;
+        StateHasChanged();
+    }
+
+    void Cerrar()
+    {
+        visible = false;
+    }
+
+    void CerrarYConfirmar()
+    {
+        if (usuario != null)
+        {
+            ActualizarUsuarioUseCase.Ejecutar(usuario,sesion.UsuarioId!.Value);
+            OnConfirmado.InvokeAsync();
+        }
+        visible = false;
+    }
+}
