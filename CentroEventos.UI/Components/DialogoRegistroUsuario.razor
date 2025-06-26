@@ -1,0 +1,90 @@
+@rendermode InteractiveServer
+@inject CrearUsuarioUseCase crearUsuario
+
+@if (visible)
+{
+    <div class="dialogo-contenedor">
+        <div class="dialogo-contenido">
+            <h3>Registro de nuevo usuario</h3>
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="@claseMensaje">@mensaje</div>
+            }
+
+            <div class="mb-3">
+                <label>Email:</label>
+                <input type="email" @bind="usuario.Email" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label>Contraseña:</label>
+                <input @bind="usuario.PasswordHash" type="password" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label>Nombre:</label>
+                <input class="form-control" @bind="usuario.Nombre" />
+            </div>
+
+            <div class="mb-3">
+                <label>Apellido:</label>
+                <input @bind="usuario.Apellido" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label>DNI:</label>
+                <input @bind="usuario.DNI" class="form-control" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary me-2" @onclick="Cerrar">Cancelar</button>
+                <button class="btn btn-primary" @onclick="Registrar">Registrarse</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool visible = false;
+    private Usuario usuario = new Usuario();
+
+    private string mensaje = "";
+    private string claseMensaje = "";
+
+    [Parameter] public EventCallback OnRegistrado { get; set; }
+
+    public void Mostrar()
+    {
+        usuario = new Usuario();
+        mensaje = "";
+        claseMensaje = "";
+        visible = true;
+        StateHasChanged();
+    }
+
+    void Cerrar()
+    {
+        visible = false;
+    }
+
+    void Registrar()
+    {
+        try
+        {
+            crearUsuario.Ejecutar(usuario);
+            mensaje = "Registro exitoso.";
+            claseMensaje = "alert alert-success";
+
+            OnRegistrado.InvokeAsync();
+
+            usuario = new Usuario();
+            visible = false;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+}

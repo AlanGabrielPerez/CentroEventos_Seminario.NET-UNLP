@@ -30,7 +30,7 @@ public class ReservaAltaUseCase(
             reserva.FechaAltaReserva = DateTime.Now;
             reserva.EstadoAsistencia = EstadoAsistencia.Pendiente;
 
-            _reservaRepo.Crear(reserva);
+            _reservaRepo.Modificar(reserva);
         }
     }
 }

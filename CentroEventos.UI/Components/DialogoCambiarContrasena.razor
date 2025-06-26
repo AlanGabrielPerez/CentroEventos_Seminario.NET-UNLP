@@ -5,26 +5,16 @@
 {
     <div class="dialogo-contenedor">
         <div class="dialogo-contenido">
-            <h3>Editar Usuario</h3>
+            <h3>Cambiar contraseña</h3>
 
             <div class="mb-3">
-                <label>Nombre:</label>
-                <input class="form-control" @bind="usuario.Nombre" />
+                <label>Nueva contraseña:</label>
+                <input class="form-control" @bind="contraNueva" />
             </div>
 
             <div class="mb-3">
-                <label>Apellido:</label>
-                <input class="form-control" @bind="usuario.Apellido" />
-            </div>
-
-            <div class="mb-3">
-                <label>DNI:</label>
-                <input class="form-control" @bind="usuario.DNI" />
-            </div>
-
-            <div class="mb-3">
-                <label>Telefono:</label>
-                <input class="form-control" @bind="usuario.Telefono" />
+                <label>Contraseña vieja:</label>
+                <input type="password" class="form-control" @bind="contraVieja" />
             </div>
 
             <div class="d-flex justify-content-end">
@@ -39,10 +29,13 @@
     private bool visible = false;
     private Usuario? usuario;
 
+    private string contraNueva = "";
+    private string contraVieja = "";
+
     [Parameter] public EventCallback OnConfirmado { get; set; }
 
     [Inject] public ObtenerUsuarioUseCase ObtenerUsuarioUseCase { get; set; } = null!;
-    [Inject] public ActualizarUsuarioUseCase ActualizarUsuarioUseCase { get; set; } = null!;
+    [Inject] public CambiarContrasenaUseCase cambiarContrasena { get; set; } = null!;
 
     public void Mostrar(int idUsuario)
     {
@@ -60,7 +53,7 @@
     {
         if (usuario != null)
         {
-            ActualizarUsuarioUseCase.Ejecutar(usuario, sesion.UsuarioId!.Value);
+            cambiarContrasena.Ejecutar(sesion.UsuarioId!.Value, contraNueva,contraVieja);
             OnConfirmado.InvokeAsync();
         }
         visible = false;

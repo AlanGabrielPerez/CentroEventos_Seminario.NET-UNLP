@@ -1,1 +1,63 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+@inject NavigationManager nav
+
+<DialogoRegistroUsuario @ref="registroDialogo" OnRegistrado="OnRegistrado" />
+
+<div class="container mt-5" style="max-width: 60%;">
+    <div class="text-center" >
+        <h1 class="display-4" style=" background-image: linear-gradient(to right, #007bff, #8e0045); ">
+            Bienvenido al Sistema de Gestión de Eventos</h1>
+        <p class="lead mt-4">
+            Esta plataforma permite organizar y administrar eventos deportivos y controlar reservas de manera sencilla y eficiente.
+        </p>
+
+        @if (sesion.UsuarioId == null)
+        {
+            <div class="mt-4">
+                <p class="fw-bold text-danger">Debe iniciar sesión para acceder al sistema.</p>
+                <p class="mt-3">¿No tenés una cuenta? 
+                <a href="#" @onclick="MostrarRegistro">Registrate aquí</a>
+                </p>
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="alert alert-success">@mensaje</div>
+                }   
+            </div>
+        } 
+    </div>
+</div>
+
+<style>
+    .display-4 {
+        background-image: linear-gradient(to right, #007bff, #3c0147);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display:flex;
+        align-items:center;
+        justify-content: center;
+        font-size: 4rem;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+@code
+{
+    private string mensaje = "";
+ 
+    DialogoRegistroUsuario registroDialogo = null!;
+
+    void MostrarRegistro()
+    {
+        registroDialogo.Mostrar();
+    }
+
+    void OnRegistrado()
+    {
+        
+        mensaje = "Podra ingresar al sistema luego de ser aceptado por un encargado.\n Gracias por unirse a nuestra comunidad.";
+    }
+}

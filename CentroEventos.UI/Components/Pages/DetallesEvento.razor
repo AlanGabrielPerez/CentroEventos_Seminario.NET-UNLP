@@ -13,10 +13,6 @@
 {
     <p>No estás logueado.</p>
 }
-else
-{
-    <p>Bienvenido, @sesion.Nombre</p>
-}
 
 <h3>Detalle del Evento</h3>
 
@@ -26,7 +22,8 @@ else
 }
 else
 {
-
+<div class="container mt-5" style="max-width: 60%;">
+    
     <dl class="row">
         <dt class="col-sm-3">Nombre:</dt>
         <dd class="col-sm-9">@evento.Nombre</dd>
@@ -43,6 +40,7 @@ else
         <dt class="col-sm-3">Descripción:</dt>
         <dd class="col-sm-9">@evento.Descripcion</dd>
     </dl>
+</div>
     <hr>
 
     <h4>Reservas</h4>
@@ -102,7 +100,7 @@ else
                         @if (u != null)
                         {
                             <tr>
-                                <td>@u.Nombre</td>
+                                <td>EVT-@solicitud.EventoDeportivoId/@solicitud.Id</td>
                                 <td>@u.Nombre</td>
                                 <td>@u.Apellido</td>
                                 <td>@u.Email</td>

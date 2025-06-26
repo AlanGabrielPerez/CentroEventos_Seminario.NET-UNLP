@@ -3,9 +3,11 @@
 {
    <div class="dialogo-contenedor">
        <div class="dialogo-contenido">
-           <h3>@Mensaje</h3>
-           <button class="btn btn-primary" @onclick="CerrarYconfirmar">Aceptar</button>
-           <button class="btn btn-secondary" @onclick="Cerrar">Cancelar</button>
+            <h3>@Mensaje</h3>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" @onclick="CerrarYconfirmar">Aceptar</button>
+                <button class="btn btn-secondary" @onclick="Cerrar">Cancelar</button>
+            </div>
        </div>
    </div>
 }

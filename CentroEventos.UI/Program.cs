@@ -26,7 +26,7 @@ builder.Services.AddScoped<ReservaValidador>();
 
 
 builder.Services.AddScoped<LoginUseCase>();
-
+builder.Services.AddScoped<CambiarContrasenaUseCase>();
 
 //casos de uso usuario
 builder.Services.AddTransient<CrearUsuarioUseCase>();

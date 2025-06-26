@@ -90,6 +90,7 @@
         if (loginUseCase.Ejecutar(email, password))
         {
             mensaje = null;
+            Navigation.NavigateTo("/");
         }
         else
         {   
@@ -103,5 +104,6 @@
         sesion.CerrarSesion();
         email = string.Empty;
         password = string.Empty;
+        Navigation.NavigateTo("/");
     }
 }
