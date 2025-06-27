@@ -90,12 +90,12 @@
         if (loginUseCase.Ejecutar(email, password))
         {
             mensaje = null;
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/temp");
         }
         else
-        {   
+        {
             password = string.Empty;
-            mensaje = "Credenciales invalidas.";
+            mensaje = "Credenciales inválidas.";
         }
     }
 
@@ -104,6 +104,6 @@
         sesion.CerrarSesion();
         email = string.Empty;
         password = string.Empty;
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/temp");
     }
 }

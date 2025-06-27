@@ -1,0 +1,30 @@
+@page "/temp"
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+@inject NavigationManager nav
+
+<div class="overlay-modal">
+    <h1 class="texto-gradiente animado">@mensajeAnimado</h1>
+</div>
+
+@code {
+    private string mensajeAnimado = "";
+    private bool yaEjecutado = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !yaEjecutado)
+        {
+            yaEjecutado = true;
+
+            mensajeAnimado = sesion.UsuarioId == null
+                ? "Saliendo del sistema. . ."
+                : $"Bienvenido al Sistema de Gestión de Eventos";
+
+            StateHasChanged(); 
+
+            await Task.Delay(1000);
+            nav.NavigateTo("/");
+        }
+    }
+}

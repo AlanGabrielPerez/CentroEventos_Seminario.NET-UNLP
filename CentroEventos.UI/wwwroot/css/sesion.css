@@ -1,0 +1,33 @@
+.overlay-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.animado {
+    animation: fluido 3s ease-in-out;
+}
+
+.texto-gradiente {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-emphasis-color: transparent; 
+    animation: fluido 3s ease-in-out forwards;
+    font-size: 4rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+@keyframes fluido {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
