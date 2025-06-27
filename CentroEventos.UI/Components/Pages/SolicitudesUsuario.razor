@@ -5,11 +5,12 @@
 @inject AceptarUsuarioUseCase aceptarUsuario
 @inject RechazarUsuarioUseCase rechazarUsuario
 
+<DialogoConfirmacion @ref="dialogo" OnConfirmado="Rechazar"/>
+
 @if (sesion.UsuarioId is null)
 {
     <p>No estás logueado.</p>
 }
-
 
 @if (!string.IsNullOrEmpty(mensaje))
 {
@@ -36,7 +37,7 @@
                 <td>@user.Email</td>
                 <td>
                     <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
-                    <button class="btn btn-danger"@onclick="()=>Rechazar(user.Id)">Rechazar</button>
+                    <button class="btn btn-danger"@onclick="()=>RechazarUsuario(user)">Rechazar</button>
                 </td>
             </tr>
 
@@ -47,7 +48,8 @@
 @code {
     private List<Usuario> _lista = new List<Usuario>();
     private int? idSesion;
-
+     DialogoConfirmacion dialogo = null!;
+    Usuario _usuario = null!;
     private string mensaje = "";
     private string claseMensaje = "";
 
@@ -93,18 +95,26 @@
         }
     }
 
-    void Rechazar(int userId)
+     private void RechazarUsuario(Usuario u)
+    {
+        _usuario = u;
+        dialogo.Mostrar($"¿Desea rechazar la reserva?");
+    }
+
+    void Rechazar()
     {
         try
         {
             if (idSesion is null)
                 throw new Exception("Sesión no iniciada.");
 
-            rechazarUsuario.Ejecutar(userId, idSesion.Value);
-
-            mensaje = "Usuario rechazado correctamente.";
-            claseMensaje = "alert alert-warning";
-            ActualizarLista();
+            if (_usuario != null){
+                int userId = _usuario.Id;     
+                rechazarUsuario.Ejecutar(userId, idSesion.Value);
+                mensaje = "Usuario rechazado correctamente.";
+                claseMensaje = "alert alert-warning";
+                ActualizarLista();
+            }
         }
         catch (Exception ex)
         {

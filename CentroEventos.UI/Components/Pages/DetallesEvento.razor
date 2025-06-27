@@ -9,6 +9,9 @@
 @inject VerificarPermisosUseCase verificarPermiso
 @inject ISesionUsuario sesion
 
+
+<DialogoConfirmacion @ref="dialogo" OnConfirmado="Rechazar"/>
+
 @if (sesion.UsuarioId == null)
 {
     <p>No estás logueado.</p>
@@ -106,7 +109,7 @@ else
                                 <td>@u.Email</td>
                                 <td>
                                     <button class="btn btn-primary" @onclick="() => AceptarReserva(solicitud.Id)">Aceptar</button>
-                                    <button class="btn btn-danger" @onclick="() => RechazarReserva(solicitud.Id)">Rechazar</button>
+                                    <button class="btn btn-danger" @onclick="() => RechazarReserva(solicitud)">Rechazar</button>
                                 </td>
                             </tr>
                         }
@@ -123,10 +126,10 @@ else
 
 
 @code {
-    [Parameter]
-    public int EventoId { get; set; }
+    [Parameter] public int EventoId { get; set; }
     private EventoDeportivo? evento;
 
+    DialogoConfirmacion dialogo = null!;
     private List<Reserva> reservas = new List<Reserva>();
     private List<Usuario> _listaReservado = new List<Usuario>();
     private List<Reserva> _listaSolicitudes = new List<Reserva>();
@@ -134,7 +137,7 @@ else
     private string claseMensaje = "";
     private string msj = "";
     private int? idSesion;
-
+    private Reserva? _reserva = null;
     protected override void OnInitialized()
     {
         if (sesion.UsuarioId == null)
@@ -203,14 +206,24 @@ else
         }
     }
 
-    void RechazarReserva(int reservaId)
+    private void RechazarReserva(Reserva r)
+    {
+        _reserva = r;
+        dialogo.Mostrar($"¿Desea rechazar la reserva?");
+    }
+
+    void Rechazar()
     {
         try
-        {
-            rechazarReserva.Ejecutar(reservaId, idSesion!.Value);
-            mensaje = "Reserva rechazada.";
-            claseMensaje = "alert alert-success";
-            ActualizarListaSolicitudes();
+        {   
+            if (_reserva != null)
+            {
+                int reservaId = _reserva.Id;
+                rechazarReserva.Ejecutar(reservaId, idSesion!.Value);
+                mensaje = "Reserva rechazada.";
+                claseMensaje = "alert alert-success";
+                ActualizarListaSolicitudes();
+            }
         }
         catch (Exception ex)
         {
