@@ -40,4 +40,7 @@ public class RepositorioReserva(CentroEventoContext context) : RepositorioDbCont
         _context.Reservas.Where(r => r.EventoDeportivoId == idEvento && r.EstadoSolicitud == EstadoSolicitud.Pendiente)
         .ToList();
 
+    public List<Reserva>? ObtenerSolicitudesPendientesPorUsuario(int idUsuario) =>
+        _context.Reservas.Where(r => r.UsuarioId == idUsuario && r.EstadoSolicitud == EstadoSolicitud.Pendiente)
+        .ToList();
 }

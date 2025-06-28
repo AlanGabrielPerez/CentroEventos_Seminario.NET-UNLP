@@ -56,6 +56,10 @@ builder.Services.AddScoped<ListarReservasUseCase>();
 builder.Services.AddScoped<ListarSolicitudesReservaPendientesUseCase>();
 builder.Services.AddScoped<ListarReservasAprobadasUseCase>();
 builder.Services.AddScoped<RechazarSolicitudReservaUseCase>();
+builder.Services.AddScoped<UsuarioReservaPendientesUseCase>();
+builder.Services.AddScoped<UsuarioReservasActivasUseCase>();
+builder.Services.AddScoped<EliminarReservaUseCase>();
+
 
 var app = builder.Build();
 

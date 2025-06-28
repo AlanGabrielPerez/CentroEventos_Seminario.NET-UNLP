@@ -6,6 +6,10 @@
     <div class="dialogo-contenedor">
         <div class="dialogo-contenido">
             <h3>Editar Usuario</h3>
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="@claseMensaje">@mensaje</div>
+            }
 
             <div class="mb-3">
                 <label>Nombre:</label>
@@ -44,6 +48,8 @@
     [Inject] public ObtenerUsuarioUseCase ObtenerUsuarioUseCase { get; set; } = null!;
     [Inject] public ActualizarUsuarioUseCase ActualizarUsuarioUseCase { get; set; } = null!;
 
+    private string mensaje = "";
+    private string claseMensaje = "";
     public void Mostrar(int idUsuario)
     {
         usuario = ObtenerUsuarioUseCase.Ejecutar(idUsuario, sesion.UsuarioId!.Value);
@@ -58,11 +64,18 @@
 
     void CerrarYConfirmar()
     {
-        if (usuario != null)
+        try{
+            if (usuario != null)
+            {
+                ActualizarUsuarioUseCase.Ejecutar(usuario, sesion.UsuarioId!.Value);
+                OnConfirmado.InvokeAsync();
+            }
+            visible = false;
+        }catch (Exception ex)
         {
-            ActualizarUsuarioUseCase.Ejecutar(usuario, sesion.UsuarioId!.Value);
-            OnConfirmado.InvokeAsync();
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
         }
-        visible = false;
     }
+
 }

@@ -9,7 +9,7 @@
 @inject VerificarPermisosUseCase verificarPermiso
 @inject ISesionUsuario sesion
 
-
+ 
 <DialogoConfirmacion @ref="dialogo" OnConfirmado="Rechazar"/>
 
 @if (sesion.UsuarioId == null)
@@ -19,7 +19,7 @@
 
 <h3>Detalle del Evento</h3>
 
-@if (evento is null)
+@if (evento == null)
 {
     <p class="text-danger">No se encontró el evento.</p>
 }
@@ -119,9 +119,8 @@ else
             </table>
         }
     }
-
-    <a href="/eventosDisponibles" class="btn btn-secondary">Volver</a>
 }
+    <a href="/eventosDisponibles" class="btn btn-secondary">Volver</a>
 
 
 

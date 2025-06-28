@@ -1,0 +1,130 @@
+@page "/perfilUsuario"
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+@inject ObtenerUsuarioUseCase obtenerUsuario
+@inject ObtenerEventoUseCase obtenerEventos
+@inject UsuarioReservaPendientesUseCase usuarioReservaPendientes
+@inject UsuarioReservasActivasUseCase usuarioReservasActivas
+
+@if(!string.IsNullOrEmpty(mensajeGlobal))
+{
+    <div class="alert alert-danger">@mensajeGlobal</div>
+}
+
+@if (sesion.UsuarioId == null)
+{
+    <p>No estás logueado.</p>
+}
+else
+{
+    <h3>Perfil de Usuario</h3>
+
+    <div class="container mt-5r"> 
+        <dl class="row">
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@_usuario?.Nombre</dd>
+
+            <dt class="col-sm-3">Apellido:</dt>
+            <dd class="col-sm-9">@_usuario?.Apellido</dd>
+
+            <dt class="col-sm-3">DNI:</dt>
+            <dd class="col-sm-9">@_usuario?.DNI</dd>
+
+            <dt class="col-sm-3">Email:</dt>
+            <dd class="col-sm-9">@_usuario?.Email</dd>
+
+            <dt class="col-sm-3">Telefono:</dt>
+            <dd class="col-sm-9">@(_usuario?.Telefono??"")</dd>
+        </dl>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Evento Deportivo</th>
+                <th>Fecha y horario</th>
+                <th>Cantidad de horas</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+}
+
+@code{
+    private int _idUsuario;
+    private Usuario? _usuario;
+    private List<EventoDeportivo> _listaReservas = new List<EventoDeportivo>();
+    private List<EventoDeportivo> _listaSolicitudes = new List<EventoDeportivo>();
+    private String mensaje = "";
+    private String msj = "";
+
+    private String mensajeGlobal = "";
+
+
+    protected override void OnInitialized()
+    {  
+        try{
+            if (sesion.UsuarioId != null)
+            {
+                _idUsuario = sesion.UsuarioId.Value;
+                _usuario = obtenerUsuario.Ejecutar(_idUsuario,_idUsuario)!;
+                ListaReservas();
+                ListaSolicitudes();
+            }
+        }catch (Exception ex)
+        {
+            mensajeGlobal = $"Error al cargar el perfil: {ex.Message}";
+        }
+    }
+    
+    void ListaReservas()
+    {
+        try{
+            var reservas = usuarioReservasActivas.Ejecutar(_idUsuario,_idUsuario);
+            if (reservas != null && reservas.Count > 0)
+            {
+                foreach (var r in reservas)
+                {
+                    var evento = obtenerEventos.Ejecutar(r.EventoDeportivoId, _idUsuario);
+                    if (evento != null)
+                    {
+                        _listaReservas.Add(evento);
+                    }
+                }
+            }
+            else
+            {
+                msj = "No tienes reservas activas.";
+            }
+        }catch (Exception ex)
+        {
+            mensajeGlobal = $"Error: {ex.Message}";
+        }
+    }
+
+    void ListaSolicitudes(){
+        try{
+            var solicitudes = usuarioReservaPendientes.Ejecutar(_idUsuario,_idUsuario);
+            if (solicitudes != null && solicitudes.Count > 0)
+            {
+                foreach (var s in solicitudes)
+                {
+                    var evento = obtenerEventos.Ejecutar(s.EventoDeportivoId, _idUsuario);
+                    if (evento != null)
+                    {
+                        _listaSolicitudes.Add(evento);
+                    }
+                }
+            }
+            else
+            {
+                mensaje = "No tienes solicitudes pendientes.";
+            }
+        }catch (Exception ex)
+        {
+            mensajeGlobal = $"Error: {ex.Message}";
+        }
+    }
+}

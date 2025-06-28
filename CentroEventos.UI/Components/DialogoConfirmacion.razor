@@ -3,6 +3,10 @@
 {
    <div class="dialogo-contenedor">
        <div class="dialogo-contenido">
+            @if (!string.IsNullOrEmpty(msj))
+            {
+                <div class="@claseMensaje">@msj</div>
+            }
             <h3>@Mensaje</h3>
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary" @onclick="CerrarYconfirmar">Aceptar</button>
@@ -15,6 +19,9 @@
 @code{
     private bool visible = false;
     private string Mensaje ="";
+
+    private string msj = "";
+    private string claseMensaje = "";
 
     [Parameter]  public EventCallback OnConfirmado{get;set;}
 
@@ -32,8 +39,15 @@
 
     void CerrarYconfirmar()
     {
-        visible=false;
-        OnConfirmado.InvokeAsync();
+        try{
+            visible=false;
+            OnConfirmado.InvokeAsync();
+        }catch (Exception ex)
+        {
+            msj = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+            return;
+        }
     }
 
 }
