@@ -24,6 +24,8 @@ public class ReservaAltaUseCase(
                 throw new EntidadNotFoundException("Error"+ mensajeError);
             if (!_validador.ValidarCupo(reserva, out string mensajeCupo))
                 throw new CupoExcedidoException("Error"+ mensajeCupo);
+            if (!_validador.ValidarDuplicado(reserva, out string mensajeDuplicado))
+                throw new DuplicadoException(mensajeDuplicado);
            
             reserva.EstadoSolicitud = EstadoSolicitud.Aceptada;
 

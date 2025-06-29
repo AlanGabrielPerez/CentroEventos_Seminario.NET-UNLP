@@ -53,8 +53,6 @@
     private List<EventoDeportivo> _lista = new List<EventoDeportivo>();
     private int? idSesion;
 
-    private Reserva reserva = new Reserva();
-
     private string mensaje = "";
     private string claseMensaje = "";
 
@@ -83,19 +81,24 @@
     void Solicitar(int idEvento){
         try
         {
-            reserva.EventoDeportivoId = idEvento;
-            reserva.UsuarioId = idSesion!.Value;
+            var reserva = new Reserva
+            {
+                EventoDeportivoId = idEvento,
+                UsuarioId = idSesion!.Value
+            };
 
             solicitarReserva.Ejecutar(reserva);
             mensaje = "Reserva solicitada.";
             claseMensaje = "alert alert-success";
+            reserva = new Reserva(); 
 
         }
         catch (Exception ex)
         {
-            mensaje = $"Error: {ex.Message}";
+            mensaje = $"Error al solicitar reserva: {ex.Message}";
             claseMensaje = "alert alert-danger";
         }
+
     }
 
 

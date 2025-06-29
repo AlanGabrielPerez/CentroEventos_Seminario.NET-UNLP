@@ -72,7 +72,16 @@
     {
         try
         {
-            crearUsuario.Ejecutar(usuario);
+            var nuevoUsuario = new Usuario
+            {
+                Email = usuario.Email,
+                PasswordHash = usuario.PasswordHash,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                DNI = usuario.DNI
+            };
+
+            crearUsuario.Ejecutar(nuevoUsuario);
             mensaje = "Registro exitoso.";
             claseMensaje = "alert alert-success";
 

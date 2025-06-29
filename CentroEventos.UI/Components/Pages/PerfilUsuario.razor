@@ -5,6 +5,8 @@
 @inject ObtenerEventoUseCase obtenerEventos
 @inject UsuarioReservaPendientesUseCase usuarioReservaPendientes
 @inject UsuarioReservasActivasUseCase usuarioReservasActivas
+@inject CambiarContrasenaUseCase cambiarContraseniaUseCase
+@inject ActualizarUsuarioUseCase actualizarUsuarioUseCase
 
 @if(!string.IsNullOrEmpty(mensajeGlobal))
 {
@@ -16,7 +18,12 @@
     <p>No estás logueado.</p>
 }
 else
-{
+{ 
+    <DialogoEditarUsuario @ref="dialogoEditar" OnConfirmado="Refrescar" />
+    <DialogoCambiarContrasena @ref="dialogoCambioContrasena" OnConfirmado="Refrescar" />
+    
+
+
     <h3>Perfil de Usuario</h3>
 
     <div class="container mt-5r"> 
@@ -38,6 +45,18 @@ else
         </dl>
     </div>
 
+    <div class="d-flex justify-content-center mb-3">
+        <button class="btn btn-primary me-2" @onclick="Editar">Editar</button>
+        <button class="btn btn-secondary" @onclick="CambiarContrasena">Cambiar Contraseña</button>
+    </div>
+
+    <h4>Reservas a eventos deportivos</h4>
+    @if(!string.IsNullOrEmpty(msjReservas))
+    {
+        <div class="alert alert-info">@msjReservas</div>
+    }
+    else
+    {
     <table class="table">
         <thead>
             <tr>
@@ -46,20 +65,61 @@ else
                 <th>Cantidad de horas</th>
             </tr>
         </thead>
+
         <tbody>
-            
+            @foreach(var r in _listaReservas){
+                <tr> 
+                    <td>@r.Nombre</td>
+                    <td>@r.FechaHoraInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@r.DuracionHoras horas</td>
+                </tr>
+            }
         </tbody>
     </table>
+    }
+
+    <hr>
+
+    <h4>Solicitudes a eventos deportivos</h4>
+    @if(!string.IsNullOrEmpty(msjSolicitudes))
+    {
+        <div class="alert alert-info">@msjSolicitudes</div>
+    }
+    else
+    { 
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Evento Deportivo</th>
+                    <th>Fecha y horario</th>
+                    <th>Cantidad de horas</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach(var s in _listaSolicitudes){
+                    <tr> 
+                        <td>@s.Nombre</td>
+                        <td>@s.FechaHoraInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@s.DuracionHoras horas</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
 }
 
 @code{
+    DialogoEditarUsuario dialogoEditar = null!;
+    DialogoCambiarContrasena dialogoCambioContrasena = null!;
     private int _idUsuario;
     private Usuario? _usuario;
     private List<EventoDeportivo> _listaReservas = new List<EventoDeportivo>();
     private List<EventoDeportivo> _listaSolicitudes = new List<EventoDeportivo>();
-    private String mensaje = "";
-    private String msj = "";
-
+    private String msjSolicitudes = "";
+    private String msjReservas = "";
     private String mensajeGlobal = "";
 
 
@@ -96,7 +156,7 @@ else
             }
             else
             {
-                msj = "No tienes reservas activas.";
+                msjReservas = "No tienes reservas activas.";
             }
         }catch (Exception ex)
         {
@@ -120,11 +180,36 @@ else
             }
             else
             {
-                mensaje = "No tienes solicitudes pendientes.";
+               msjSolicitudes = "No tienes solicitudes pendientes.";
             }
         }catch (Exception ex)
         {
             mensajeGlobal = $"Error: {ex.Message}";
         }
+    }
+
+    void Editar(){
+        try{
+            dialogoEditar.Mostrar(_idUsuario);
+        }catch (Exception ex)
+        {
+            mensajeGlobal = $"Error al editar el usuario: {ex.Message}";
+        }
+    }
+
+    void CambiarContrasena()
+    {
+        try
+        {
+            dialogoCambioContrasena.Mostrar(_idUsuario);
+        }
+        catch (Exception ex)
+        {
+            mensajeGlobal = $"Error al cambiar la contraseña: {ex.Message}";
+        }
+    }
+    
+    void Refrescar(){
+        StateHasChanged();
     }
 }

@@ -72,11 +72,17 @@
             if (idSesion is null)
                 throw new Exception("Debe iniciar sesión para crear un evento.");
 
-            evento.ResponsableId = idResponsableSeleccionado;
-            evento.FechaHoraInicio = fechaYHoraInicio;
+            var nuevoEvento = new EventoDeportivo
+            {
+                Nombre = evento.Nombre,
+                Descripcion = evento.Descripcion,
+                CupoMaximo = evento.CupoMaximo,
+                DuracionHoras = evento.DuracionHoras,
+                ResponsableId = idResponsableSeleccionado,
+                FechaHoraInicio = fechaYHoraInicio
+            };
 
-            crearEvento.Ejecutar(evento, idSesion.Value); // usás .Value solo si estás seguro que no es null
-
+            crearEvento.Ejecutar(nuevoEvento, idSesion.Value);
             mensaje = "Evento creado con éxito.";
             claseMensaje = "alert alert-success";
             evento = new EventoDeportivo();

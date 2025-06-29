@@ -21,12 +21,13 @@ public class RepositorioReserva(CentroEventoContext context) : RepositorioDbCont
     public bool EventoTieneReservas(int eventoId) => _context.Reservas.Any(r => r.EventoDeportivoId == eventoId);
 
     public int ContarReservasDeEvento(int eventoId)
-        => _context.Reservas.Count(r => r.EventoDeportivoId == eventoId);
+        => _context.Reservas.Count(r => r.EventoDeportivoId == eventoId && r.EstadoSolicitud == EstadoSolicitud.Aceptada);
 
     public bool ExisteReserva(int UsuarioId, int eventoId)
-        => _context.Reservas.Any(r => r.UsuarioId == UsuarioId && r.EventoDeportivoId == eventoId);
+        => _context.Reservas.Any(r => r.UsuarioId == UsuarioId && r.EventoDeportivoId == eventoId && r.EstadoSolicitud == EstadoSolicitud.Aceptada);
 
-    public bool TieneReservasAsociadas(int UsuarioId) => _context.Reservas.Any(r => r.UsuarioId == UsuarioId);
+    public bool TieneReservasAsociadas(int UsuarioId) =>
+     _context.Reservas.Any(r => r.UsuarioId == UsuarioId && r.EstadoSolicitud == EstadoSolicitud.Aceptada);
 
     public List<Reserva> ObtenerTodas() => GetAll<Reserva>();
 
