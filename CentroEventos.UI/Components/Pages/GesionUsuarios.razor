@@ -17,38 +17,42 @@
     <p>No estás logueado.</p>
 }
 
-@if (!string.IsNullOrEmpty(mensaje))
-{
-    <div class="@claseMensaje">@mensaje</div>
-}
+<div class="contenedor">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>DNI</th>
-            <th>Email</th>
-            <th>ACCIÓN</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in _lista)
-        {
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="@claseMensaje">@mensaje</div>
+    }
+
+    <table class="table">
+        <thead>
             <tr>
-                <td>@user.Nombre</td>
-                <td>@user.Apellido</td>
-                <td>@user.DNI</td>
-                <td>@user.Email</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="() => Editar(user.Id)">Editar</button>
-                    <button class="btn btn-danger"@onclick="()=>ConfirmarEliminacion(user)">Eliminar</button>
-                </td>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>ACCIÓN</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in _lista)
+            {
+                <tr>
+                    <td>@user.Nombre</td>
+                    <td>@user.Apellido</td>
+                    <td>@user.DNI</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => Editar(user.Id)">Editar</button>
+                        <button class="btn btn-danger"@onclick="()=>ConfirmarEliminacion(user)">Eliminar</button>
+                    </td>
+                </tr>
 
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
+
+</div>
 
 
 

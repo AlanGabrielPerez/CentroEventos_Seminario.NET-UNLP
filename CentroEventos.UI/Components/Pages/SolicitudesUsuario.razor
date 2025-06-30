@@ -11,39 +11,41 @@
 {
     <p>No estás logueado.</p>
 }
+<div class="contenedor">
 
-@if (!string.IsNullOrEmpty(mensaje))
-{
-    <div class="@claseMensaje">@mensaje</div>
-}
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="@claseMensaje">@mensaje</div>
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>DNI</th>
-            <th>Email</th>
-            <th>ACCIÓN</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in _lista)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@user.Nombre</td>
-                <td>@user.Apellido</td>
-                <td>@user.DNI</td>
-                <td>@user.Email</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
-                    <button class="btn btn-danger"@onclick="()=>RechazarUsuario(user)">Rechazar</button>
-                </td>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>ACCIÓN</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in _lista)
+            {
+                <tr>
+                    <td>@user.Nombre</td>
+                    <td>@user.Apellido</td>
+                    <td>@user.DNI</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
+                        <button class="btn btn-danger"@onclick="()=>RechazarUsuario(user)">Rechazar</button>
+                    </td>
+                </tr>
 
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
     private List<Usuario> _lista = new List<Usuario>();

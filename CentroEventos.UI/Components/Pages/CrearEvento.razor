@@ -10,52 +10,54 @@
     <p>No estás logueado.</p>
 }
 
+<div class="contenedor">
 
-@if (!string.IsNullOrEmpty(mensaje))
-{
-    <div class="@claseMensaje">@mensaje</div>
-}
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="@claseMensaje">@mensaje</div>
+    }
 
-<div class="mb-3">
-    <label>Nombre:</label>
-    <input @bind="evento.Nombre" class="form-control">
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <input @bind="evento.Nombre" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Descripcion</label>
+        <input @bind="evento.Descripcion" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Cupo Maximo</label>
+        <input class="form-control" @bind="evento.CupoMaximo" />
+    </div>
+
+    <div class="mb-3">
+        <label>Responsable:</label>
+        <select class="form-control" @bind="idResponsableSeleccionado">
+            <option disabled selected value="">Seleccione un responsable</option>
+            @foreach (var usuario in usuarios)
+            {
+                <option value="@usuario.Id">@usuario.Nombre @usuario.Apellido</option>
+            }
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha y hora de inicio:</label>
+        <input type="datetime-local" @bind="fechaYHoraInicio" class="form-control" />
+    </div>
+
+
+    <div class="mb-3">
+        <label>Horas duracion:</label>
+        <input class="form-control" @bind="evento.DuracionHoras" />
+    </div>
+
+    <button class="btn btn-primary" @onclick="Crear">Registrar evento</button>
+
 </div>
-
-<div class="mb-3">
-    <label>Descripcion</label>
-    <input @bind="evento.Descripcion" class="form-control" />
-</div>
-
-<div class="mb-3">
-    <label>Cupo Maximo</label>
-    <input class="form-control" @bind="evento.CupoMaximo" />
-</div>
-
-<div class="mb-3">
-    <label>Responsable:</label>
-    <select class="form-control" @bind="idResponsableSeleccionado">
-        <option disabled selected value="">Seleccione un responsable</option>
-        @foreach (var usuario in usuarios)
-        {
-            <option value="@usuario.Id">@usuario.Nombre @usuario.Apellido</option>
-        }
-    </select>
-
-</div>
-
-<div class="mb-3">
-    <label>Fecha y hora de inicio:</label>
-    <input type="datetime-local" @bind="fechaYHoraInicio" class="form-control" />
-</div>
-
-
-<div class="mb-3">
-    <label>Horas duracion:</label>
-    <input class="form-control" @bind="evento.DuracionHoras" />
-</div>
-
-<button class="btn btn-primary" @onclick="Crear">Registrar evento</button>
-
 @code {
     private EventoDeportivo evento = new EventoDeportivo();
     private List<Usuario> usuarios = new();

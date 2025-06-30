@@ -19,10 +19,11 @@
 }
 else
 { 
+
     <DialogoEditarUsuario @ref="dialogoEditar" OnConfirmado="Refrescar" />
     <DialogoCambiarContrasena @ref="dialogoCambioContrasena" OnConfirmado="Refrescar" />
-    
 
+<div class="contenedor">    
 
     <h3>Perfil de Usuario</h3>
 
@@ -49,6 +50,8 @@ else
         <button class="btn btn-primary me-2" @onclick="Editar">Editar</button>
         <button class="btn btn-secondary" @onclick="CambiarContrasena">Cambiar Contraseña</button>
     </div>
+
+    <hr>
 
     <h4>Reservas a eventos deportivos</h4>
     @if(!string.IsNullOrEmpty(msjReservas))
@@ -107,9 +110,10 @@ else
             </tbody>
         </table>
     }
-
+</div>
 
 }
+
 
 @code{
     DialogoEditarUsuario dialogoEditar = null!;

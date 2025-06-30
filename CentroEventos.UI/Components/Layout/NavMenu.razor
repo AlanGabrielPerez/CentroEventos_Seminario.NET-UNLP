@@ -24,9 +24,9 @@
         @if (sesion.UsuarioId == null)
         {
              <div class="nav-item px-3">
-                <input @bind="email" placeholder="Email" />
-                <input @bind="password" type="password" placeholder="Contraseña" />
-                <button @onclick="IniciarSesion">Iniciar Sesión</button>
+                <input @bind="email" placeholder="Email" class="form-control mb-2" />
+                <input @bind="password" type="password" placeholder="Contraseña" class="form-control mb-2" />
+                <button class="btn btn-primary" @onclick="IniciarSesion">Iniciar Sesión</button>
                 @if (!string.IsNullOrEmpty(mensaje))
                 {
                     <div class="alert alert-danger">@mensaje</div>
@@ -36,8 +36,8 @@
         else
         {  
             <div class="nav-item px-3">
-            <p style="color: white;"> Bienvenido @sesion.Nombre</p>
-            <button @onclick="CerrarSesion">Cerrar Sesión</button>
+            <p style="color: white; font-size: 1.5rem"> Bienvenido @sesion.Nombre</p>
+            <button class="btn btn-secondary me-2" @onclick="CerrarSesion">Cerrar Sesión</button>
             </div>
             
             <div class="nav-item px-3">

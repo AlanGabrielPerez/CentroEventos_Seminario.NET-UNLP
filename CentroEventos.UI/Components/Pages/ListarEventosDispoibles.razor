@@ -9,44 +9,44 @@
     <p>No estás logueado.</p>
 }
 
+<div class="contenedor">
 
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="@claseMensaje">@mensaje</div>
+    }
 
-@if (!string.IsNullOrEmpty(mensaje))
-{
-    <div class="@claseMensaje">@mensaje</div>
-}
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Fecha </th>
-            <th>Duracion </th>
-            <th>Cupo disponible</th>
-            <th>Solicitar Reserva</th>
-            <th>Detalles evento</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var evento in _lista)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@evento.Nombre</td>
-                <td>@evento.FechaHoraInicio</td>
-                <td>@evento.DuracionHoras</td>
-                <td>@evento.CupoMaximo</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="()=>Solicitar(evento.Id)">Solicitar</button>
-                </td>
-                <td>
-                    <a href="/detalleEvento/@evento.Id" class="btn btn-info">Ver</a>
-                </td>
+                <th>Nombre</th>
+                <th>Fecha </th>
+                <th>Duracion </th>
+                <th>Cupo disponible</th>
+                <th>Solicitar Reserva</th>
+                <th>Detalles evento</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var evento in _lista)
+            {
+                <tr>
+                    <td>@evento.Nombre</td>
+                    <td>@evento.FechaHoraInicio</td>
+                    <td>@evento.DuracionHoras</td>
+                    <td>@evento.CupoMaximo</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>Solicitar(evento.Id)">Solicitar</button>
+                    </td>
+                    <td>
+                        <a href="/detalleEvento/@evento.Id" class="btn btn-info">Ver</a>
+                    </td>
+                </tr>
 
-        }
-    </tbody>
-</table>
-
+            }
+        </tbody>
+    </table>
+</div> 
 
 
 @code {

@@ -31,3 +31,10 @@
     100% { background-position: 0% 50%; }
 }
 
+.contenedor {
+    width: 90%;
+    margin: auto;
+    padding: 40px;
+    box-sizing: border-box;    
+}
+
