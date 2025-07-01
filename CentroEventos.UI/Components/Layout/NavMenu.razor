@@ -36,8 +36,7 @@
         else
         {  
             <div class="nav-item px-3">
-            <p style="color: white; font-size: 1.5rem"> Bienvenido @sesion.Nombre</p>
-            <button class="btn btn-secondary me-2" @onclick="CerrarSesion">Cerrar Sesión</button>
+                <p style="color: white; font-size: 1.5rem"> Bienvenido @sesion.Nombre</p>
             </div>
             
             <div class="nav-item px-3">
@@ -46,33 +45,52 @@
                 </NavLink>
             </div>
             
+            <div class="nav-item px-3">
+               <NavLink class="nav-link" href="eventosDisponibles">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Eventos Disponibles
+                </NavLink>
+            </div>
+
+            @if (verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.UsuarioAlta))
+            {
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="eventosDisponibles">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Eventos Disponibles
-                    </NavLink>
+                <NavLink class="nav-link" href="solicitudesUsuario">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Solicitudes Usuario
+                </NavLink>
                 </div>
-
-                @if (verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.UsuarioAlta))
-                {
-                    <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="solicitudesUsuario">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Solicitudes Usuario
-                    </NavLink>
-                    </div>
-                }
-
+            }
+            @if (verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.UsuarioBaja) || 
+                verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.UsuarioModificacion))
+            {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="gestionUsuarios">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Gestion Usuarios
                     </NavLink>
                 </div>
-
+            }
+            @if (verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.EventoAlta))
+            {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="crearEvento">
                         <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Crear Evento
-                    </NavLink>
+                    </NavLink>  
                 </div>
-       
+            }
+            
+            @if (verificarPermiso.Ejecutar(sesion.UsuarioId.Value, Permiso.Administrador))
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="gestionPermisos">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Crear Evento
+                    </NavLink>  
+                </div>
+            }
+        
+        
+            <div class="nav-item px-3">
+                <button class="btn btn-secondary me-2" @onclick="CerrarSesion">Cerrar Sesión</button>
+            </div>
+      
     
         }
     </nav>

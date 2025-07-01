@@ -23,44 +23,43 @@ public class CrearUsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioAutor
             usuario.PasswordHash = ServicioHash.ConvertirASha256(usuario.PasswordHash);
 
         if (_UsuarioRepo.ObtenerPorId(1) == null)
-        {
-            usuario.EstadoSolicitud = EstadoSolicitud.Aceptada;
-            _UsuarioRepo.Crear(usuario);
-
-            var permisos = new[]
-            {
-                Permiso.Administrador,
-                Permiso.Lectura,
-                Permiso.UsuarioAlta,
-                Permiso.UsuarioBaja,
-                Permiso.UsuarioModificacion,
-                Permiso.ReservaAlta,
-                Permiso.ReservaBaja,
-                Permiso.ReservaModificacion,
-                Permiso.EventoAlta,
-                Permiso.EventoBaja,
-                Permiso.EventoModificacion
-            };
-
-            foreach (var permiso in permisos)
-            {
-                var nuevoPermiso = new PermisoUsuario
-                {
-                    UsuarioId = 1,
-                    Permiso = permiso
-                };
-                _auth.AgregarPermisoUsuario(nuevoPermiso);
-                usuario.Permisos.Add(nuevoPermiso);
-            }
-
-        }
-
+            CrearAdmin(usuario);
         else
         {
-
             usuario.EstadoSolicitud = EstadoSolicitud.Pendiente;
-
             _UsuarioRepo.Crear(usuario);
+        }
+    }
+
+    private void CrearAdmin(Usuario usuario)
+    {
+        usuario.EstadoSolicitud = EstadoSolicitud.Aceptada;
+        _UsuarioRepo.Crear(usuario);
+
+        var permisos = new[]
+        {
+            Permiso.Administrador,
+            Permiso.Lectura,
+            Permiso.UsuarioAlta,
+            Permiso.UsuarioBaja,
+            Permiso.UsuarioModificacion,
+            Permiso.ReservaAlta,
+            Permiso.ReservaBaja,
+            Permiso.ReservaModificacion,
+            Permiso.EventoAlta,
+            Permiso.EventoBaja,
+            Permiso.EventoModificacion
+        };
+
+        foreach (var permiso in permisos)
+        {
+            var nuevoPermiso = new PermisoUsuario
+            {
+                UsuarioId = 1,
+                Permiso = permiso
+            };
+            _auth.AgregarPermisoUsuario(nuevoPermiso);
+            usuario.Permisos.Add(nuevoPermiso);
         }
     }
 }

@@ -1,0 +1,160 @@
+@page "/gestionPermisos"
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+@inject ListarUsuariosUseCase listarUsuarios
+@inject OtorgarPermisoUseCase agregarPermiso
+@inject EliminarPermisoUseCase eliminarPermiso
+@inject VerificarPermisosUseCase verificarPermiso
+
+@if (sesion.UsuarioId is null)
+{
+    <p>No estás logueado.</p>
+}
+else
+{
+    <div class="contenedor">
+        <h3>Gestión de Permisos</h3>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="@claseMensaje">@mensaje</div>
+        }
+
+        <div class="mb-3">
+            <label>Seleccionar Usuario:</label>
+            <select @bind="idUsuarioSeleccionado" class="form-control mb-2">
+                <option disabled selected value="0">-Seleccione un usuario-</option>
+                @foreach (var usuario in usuarios)
+                {
+                    <option value="@usuario.Id">@usuario.Nombre @usuario.Apellido</option>
+                }
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-center mb-3">
+            <button class="btn btn-primary me-2" @onclick="SeleccionarUsuario">Seleccionar Usuario</button>
+        </div>
+
+        @if (_usuario is not null)
+        {
+            <div class="mb-3">
+                <label> Seleccionar Permiso:</label>
+                <select @bind="permisoSeleccionado" class="form-control mb-2">
+                    <option disabled selected value="">-Seleccione un permiso-</option>
+                    @foreach (var permiso in Enum.GetValues(typeof(Permiso)).Cast<Permiso>())
+                    {
+                        <option value="@permiso">@permiso</option>
+                    }
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+                <button class="btn btn-primary me-2" @onclick="HabilitarPermiso" disabled="@verificarPermiso.Ejecutar(_usuario.Id, permisoSeleccionado)">Agregar</button>
+                <button class="btn btn-secondary" @onclick="QuitarPermiso" disabled="@(!verificarPermiso.Ejecutar(_usuario.Id, permisoSeleccionado))">Quitar</button>
+            </div>
+
+            <hr>
+
+            <h2>@_usuario.Nombre @_usuario.Apellido</h2>
+
+            <h3>Permisos del Usuario</h3>
+            <ul class="list-group">
+                @foreach (var permiso in Enum.GetValues(typeof(Permiso)).Cast<Permiso>())
+                {
+                    if (verificarPermiso.Ejecutar(_usuario.Id, permiso))
+                    {
+                        <li class="list-group-item">@permiso</li>
+                    }
+                }
+            </ul>
+        }
+    </div>
+}
+
+@code {
+    private List<Usuario> usuarios = new();
+    private int idUsuarioSeleccionado = 0;
+    private Usuario? _usuario;
+    private Permiso permisoSeleccionado;
+
+    private string mensaje = "";
+    private string claseMensaje = "";
+    private int idSesion;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (sesion.UsuarioId != null)
+            {
+                idSesion = sesion.UsuarioId.Value;
+                ActualizarlistaUsuarios();
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void ActualizarlistaUsuarios()
+    {
+        try
+        {
+            usuarios = listarUsuarios.Ejecutar(idSesion);
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar la lista de usuarios: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void SeleccionarUsuario()
+    {
+        _usuario = usuarios.FirstOrDefault(u => u.Id == idUsuarioSeleccionado);
+        permisoSeleccionado = default; // reset
+    }
+
+    void HabilitarPermiso()
+    {
+        if (_usuario is null) return;
+        try
+        {
+            if (permisoSeleccionado != default)
+            {
+                agregarPermiso.Ejecutar(_usuario.Id, permisoSeleccionado, idSesion);
+                mensaje = "Permiso otorgado correctamente.";
+                claseMensaje = "alert alert-success";
+            }
+            else
+            {
+                mensaje = "Debe seleccionar un permiso.";
+                claseMensaje = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al otorgar permiso: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void QuitarPermiso()
+    {
+        if (_usuario is null) return;
+        try
+        {
+            eliminarPermiso.Ejecutar(_usuario.Id, permisoSeleccionado, idSesion);
+            mensaje = "Permiso quitado correctamente.";
+            claseMensaje = "alert alert-success";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al quitar permiso: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+}

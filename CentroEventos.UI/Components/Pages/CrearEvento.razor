@@ -19,22 +19,22 @@
 
     <div class="mb-3">
         <label>Nombre:</label>
-        <input @bind="evento.Nombre" class="form-control">
+        <input @bind="evento.Nombre" class="form-control mb-2">
     </div>
 
     <div class="mb-3">
         <label>Descripcion</label>
-        <input @bind="evento.Descripcion" class="form-control" />
+        <input @bind="evento.Descripcion" class="form-control mb-2" />
     </div>
 
     <div class="mb-3">
         <label>Cupo Maximo</label>
-        <input class="form-control" @bind="evento.CupoMaximo" />
+        <input  @bind="evento.CupoMaximo" class="form-control mb-2"/>
     </div>
 
     <div class="mb-3">
         <label>Responsable:</label>
-        <select class="form-control" @bind="idResponsableSeleccionado">
+        <select  @bind="idResponsableSeleccionado" class="form-control mb-2" >
             <option disabled selected value="">Seleccione un responsable</option>
             @foreach (var usuario in usuarios)
             {
@@ -46,18 +46,20 @@
 
     <div class="mb-3">
         <label>Fecha y hora de inicio:</label>
-        <input type="datetime-local" @bind="fechaYHoraInicio" class="form-control" />
+        <input type="datetime-local" @bind="fechaYHoraInicio" class="form-control mb-2" />
     </div>
 
 
     <div class="mb-3">
         <label>Horas duracion:</label>
-        <input class="form-control" @bind="evento.DuracionHoras" />
+        <input @bind="evento.DuracionHoras" class="form-control mb-2"/>
     </div>
-
-    <button class="btn btn-primary" @onclick="Crear">Registrar evento</button>
-
+    
+    <div class="d-flex justify-content-center mb-3">
+        <button class="btn btn-primary" @onclick="Crear">Registrar evento</button>
+    </div>
 </div>
+
 @code {
     private EventoDeportivo evento = new EventoDeportivo();
     private List<Usuario> usuarios = new();

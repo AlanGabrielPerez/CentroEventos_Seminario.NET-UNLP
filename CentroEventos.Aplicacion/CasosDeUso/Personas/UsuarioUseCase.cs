@@ -13,6 +13,6 @@ public abstract class UsuarioUseCase(IUsuarioRepositorio UsuarioRepo, IServicioA
         if (_auth == null)
             throw new FalloAutorizacionException("Servicio de autorización no disponible.");
         if (!_auth.PoseeElPermiso(idUsuario, permiso))
-            throw new FalloAutorizacionException($"No tiene permiso para {permiso}.");
+            throw new FalloAutorizacionException($"No tiene permiso de {permiso}.");
     }
 }

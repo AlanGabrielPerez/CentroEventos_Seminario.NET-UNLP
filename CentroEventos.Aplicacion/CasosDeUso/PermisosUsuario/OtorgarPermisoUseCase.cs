@@ -17,6 +17,9 @@ public class OtorgarPermisoUseCase(IUsuarioRepositorio usuarioRepo,
         if (usuario == null)
             throw new EntidadNotFoundException($"Usuario con ID {usuarioId} no encontrado.");
 
+        if(_auth.PoseeElPermiso(usuarioId, permiso))
+            throw new DuplicadoException($"El usuario ya tiene el permiso {permiso}.");
+        
         var permisoUsuario = new PermisoUsuario
         {
             UsuarioId = usuarioId,
