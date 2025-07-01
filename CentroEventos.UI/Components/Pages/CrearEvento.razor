@@ -68,13 +68,11 @@
     private string mensaje = "";
     private string claseMensaje = "";
 
-    private int? idSesion;
+    private int idSesion;
     void Crear()
     {
         try
         {
-            if (idSesion is null)
-                throw new Exception("Debe iniciar sesión para crear un evento.");
 
             var nuevoEvento = new EventoDeportivo
             {
@@ -86,7 +84,7 @@
                 FechaHoraInicio = fechaYHoraInicio
             };
 
-            crearEvento.Ejecutar(nuevoEvento, idSesion.Value);
+            crearEvento.Ejecutar(nuevoEvento, idSesion);
             mensaje = "Evento creado con éxito.";
             claseMensaje = "alert alert-success";
             evento = new EventoDeportivo();
@@ -99,9 +97,8 @@
     }
     protected override void OnInitialized()
     {
-        idSesion = sesion.UsuarioId;
+        idSesion = sesion.UsuarioId.Value!;
 
-        if (idSesion != null)
-            usuarios = listarUsuarios.Ejecutar(idSesion.Value)!.ToList();
+        usuarios = listarUsuarios.Ejecutar(idSesion)!.ToList();
     }
 }

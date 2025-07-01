@@ -49,6 +49,7 @@ builder.Services.AddScoped<CrearEventoDeportivoUseCase>();
 builder.Services.AddScoped<ListarEventosDeportivosUseCase>();
 builder.Services.AddScoped<ListarEventosConCupoDisponibleUseCase>();
 builder.Services.AddScoped<ObtenerEventoUseCase>();
+builder.Services.AddScoped<ActualizarEventoDeportivoUseCase>();
 
 //casos de uso reserva
 builder.Services.AddScoped<CrearReservaUseCase>();

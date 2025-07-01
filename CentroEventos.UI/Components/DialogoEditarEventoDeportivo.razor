@@ -1,0 +1,104 @@
+@rendermode InteractiveServer
+@inject ISesionUsuario sesion
+
+@if (visible && evento != null)
+{
+    <div class="dialogo-contenedor">
+        <div class="dialogo-contenido">
+            <h3>Editar evento</h3>
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="@claseMensaje">@mensaje</div>
+            }
+
+            <div class="mb-3">
+                <label>Nombre:</label>
+                <input @bind="evento.Nombre" class="form-control mb-2">
+            </div>
+
+            <div class="mb-3">
+                <label>Descripcion</label>
+                <input @bind="evento.Descripcion" class="form-control mb-2" />
+            </div>
+
+            <div class="mb-3">
+                <label>Cupo Maximo</label>
+                <input  @bind="evento.CupoMaximo" class="form-control mb-2"/>
+            </div>
+
+            <div class="mb-3">
+                <label>Responsable:</label>
+                <select  @bind="evento.ResponsableId" class="form-control mb-2" >
+                    <option disabled selected value="">Seleccione un responsable</option>
+                    @foreach (var usuario in usuarios)
+                    {
+                        <option value="@usuario.Id">@usuario.Nombre @usuario.Apellido</option>
+                    }
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+                <label>Fecha y hora de inicio:</label>
+                <input type="datetime-local" @bind="evento.FechaHoraInicio" class="form-control mb-2" />
+            </div>
+
+
+            <div class="mb-3">
+                <label>Horas duracion:</label>
+                <input @bind="evento.DuracionHoras" class="form-control mb-2"/>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary me-2" @onclick="Cerrar">Cancelar</button>
+                <button class="btn btn-primary" @onclick="CerrarYConfirmar">Guardar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+    private bool visible = false;
+    private EventoDeportivo? evento;
+    private List<Usuario> usuarios = new();
+
+
+    [Parameter] public EventCallback OnConfirmado { get; set; }
+    [Inject] public ObtenerEventoUseCase ObtenerEvento { get; set; } = null!;
+    [Inject] public ActualizarEventoDeportivoUseCase ActualizarEvento { get; set; } = null!;
+    [Inject] public ListarUsuariosUseCase listarUsuarios { get; set; } = null!;
+
+    private string mensaje = "";
+    private string claseMensaje = "";
+    
+    public void Mostrar(int idEvento)
+    {
+        evento = ObtenerEvento.Ejecutar(idEvento, sesion.UsuarioId!.Value);
+        usuarios = listarUsuarios.Ejecutar(sesion.UsuarioId!.Value);
+        visible = true;
+        StateHasChanged();
+    }
+
+    void Cerrar()
+    {
+        visible = false;
+    }
+
+    void CerrarYConfirmar()
+    {
+        try{
+            if (evento != null)
+            {
+                ActualizarEvento.Ejecutar(evento, sesion.UsuarioId!.Value);
+                OnConfirmado.InvokeAsync();
+            }
+            visible = false;
+        }catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+
+}

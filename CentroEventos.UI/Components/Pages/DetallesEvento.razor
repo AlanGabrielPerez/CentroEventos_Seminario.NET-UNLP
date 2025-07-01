@@ -11,6 +11,7 @@
 
  
 <DialogoConfirmacion @ref="dialogo" OnConfirmado="Rechazar"/>
+<DialogoEditarEventoDeportivo @ref="dialogoEditar" OnConfirmado="Refrescar" />
 
 @if (sesion.UsuarioId == null)
 {
@@ -19,110 +20,116 @@
 
 <div class="contenedor">
 
-<h3>Detalle del Evento</h3>
+    <h3>Detalle del Evento</h3>
 
-@if (evento == null)
-{
-    <p class="text-danger">No se encontró el evento.</p>
-}
-else
-{
-<div class="container mt-5">
-    
-    <dl class="row">
-        <dt class="col-sm-3">Nombre:</dt>
-        <dd class="col-sm-9">@evento.Nombre</dd>
-
-        <dt class="col-sm-3">Fecha:</dt>
-        <dd class="col-sm-9">@evento.FechaHoraInicio</dd>
-
-        <dt class="col-sm-3">Duración:</dt>
-        <dd class="col-sm-9">@evento.DuracionHoras horas</dd>
-
-        <dt class="col-sm-3">Cupo disponible:</dt>
-        <dd class="col-sm-9">@evento.CupoMaximo</dd>
-
-        <dt class="col-sm-3">Descripción:</dt>
-        <dd class="col-sm-9">@evento.Descripcion</dd>
-    </dl>
-</div>
-
-    <hr>
-
-    <h4>Reservas</h4>
-    @if (!string.IsNullOrEmpty(msj))
+    @if (evento == null)
     {
-        <p class="text-danger">@msj</p>
+        <p class="text-danger">No se encontró el evento.</p>
     }
     else
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in _listaReservado)
-                {
-                    <tr>
-                        <td>@user.Nombre</td>
-                        <td>@user.Apellido</td>
-                        <td>@user.Email</td>
-                    </tr>
+    <div class="container mt-5">
+        
+        <dl class="row">
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@evento.Nombre</dd>
 
-                }
-            </tbody>
-        </table>
-    }
+            <dt class="col-sm-3">Fecha:</dt>
+            <dd class="col-sm-9">@evento.FechaHoraInicio</dd>
 
-    @if (verificarPermiso.Ejecutar(sesion.UsuarioId!.Value, Permiso.ReservaAlta))
-    {
+            <dt class="col-sm-3">Duración:</dt>
+            <dd class="col-sm-9">@evento.DuracionHoras horas</dd>
 
+            <dt class="col-sm-3">Cupo disponible:</dt>
+            <dd class="col-sm-9">@evento.CupoMaximo</dd>
+
+            <dt class="col-sm-3">Responsable:</dt>
+            <dd class="col-sm-9">@responsable.Nombre @responsable.Apellido</dd>
+
+            <dt class="col-sm-3">Descripción:</dt>
+            <dd class="col-sm-9">@evento.Descripcion</dd>
+        </dl>
+    </div>
+        <div class="d-flex justify-content-center mb-3">
+        <button class="btn btn-primary me-2" @onclick="Editar">Editar</button>
+            <button class="btn btn-secondary">Eliminar </button>
+        </div>
         <hr>
-        <h4>Solicitudes de Reserva</h4>
-        @if (!string.IsNullOrEmpty(mensaje))
+
+        <h4>Reservas</h4>
+        @if (!string.IsNullOrEmpty(msj))
         {
-            <div class="@claseMensaje">@mensaje</div>
+            <p class="text-danger">@msj</p>
         }
         else
         {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Cod. Reserva</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
                         <th>Email</th>
-                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var solicitud in _listaSolicitudes)
+                    @foreach (var user in _listaReservado)
                     {
-                        var u = obtenerUsuario.Ejecutar(solicitud.UsuarioId, idSesion!.Value);
-                        @if (u != null)
-                        {
-                            <tr>
-                                <td>EVT-@solicitud.EventoDeportivoId/@solicitud.Id</td>
-                                <td>@u.Nombre</td>
-                                <td>@u.Apellido</td>
-                                <td>@u.Email</td>
-                                <td>
-                                    <button class="btn btn-primary" @onclick="() => AceptarReserva(solicitud.Id)">Aceptar</button>
-                                    <button class="btn btn-danger" @onclick="() => RechazarReserva(solicitud)">Rechazar</button>
-                                </td>
-                            </tr>
-                        }
+                        <tr>
+                            <td>@user.Nombre</td>
+                            <td>@user.Apellido</td>
+                            <td>@user.Email</td>
+                        </tr>
 
                     }
                 </tbody>
             </table>
         }
+
+        @if (verificarPermiso.Ejecutar(idSesion, Permiso.ReservaAlta))
+        {
+
+            <hr>
+            <h4>Solicitudes de Reserva</h4>
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="@claseMensaje">@mensaje</div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Cod. Reserva</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Email</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var solicitud in _listaSolicitudes)
+                        {
+                            var u = obtenerUsuario.Ejecutar(solicitud.UsuarioId, idSesion);
+                            @if (u != null)
+                            {
+                                <tr>
+                                    <td>EVT-@solicitud.EventoDeportivoId/@solicitud.Id</td>
+                                    <td>@u.Nombre</td>
+                                    <td>@u.Apellido</td>
+                                    <td>@u.Email</td>
+                                    <td>
+                                        <button class="btn btn-primary" @onclick="() => AceptarReserva(solicitud.Id)">Aceptar</button>
+                                        <button class="btn btn-danger" @onclick="() => RechazarReserva(solicitud)">Rechazar</button>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+                    </tbody>
+                </table>
+            }
+        }
     }
-}
     <a href="/eventosDisponibles" class="btn btn-secondary">Volver</a>
 
 </div>
@@ -130,16 +137,20 @@ else
 @code {
     [Parameter] public int EventoId { get; set; }
     private EventoDeportivo? evento;
+    private Usuario? responsable = new();
 
     DialogoConfirmacion dialogo = null!;
+    DialogoEditarEventoDeportivo dialogoEditar = null!;
+
     private List<Reserva> reservas = new List<Reserva>();
     private List<Usuario> _listaReservado = new List<Usuario>();
     private List<Reserva> _listaSolicitudes = new List<Reserva>();
     private string mensaje = "";
     private string claseMensaje = "";
     private string msj = "";
-    private int? idSesion;
+    private int idSesion;
     private Reserva? _reserva = null;
+
     protected override void OnInitialized()
     {
         if (sesion.UsuarioId == null)
@@ -147,9 +158,10 @@ else
             evento = null;
             return;
         }
-        idSesion = sesion.UsuarioId;
+        idSesion = sesion.UsuarioId.Value;
 
-        evento = obtenerEvento.Ejecutar(EventoId, idSesion!.Value);
+        evento = obtenerEvento.Ejecutar(EventoId, idSesion);
+        responsable = obtenerUsuario.Ejecutar(evento.ResponsableId, idSesion);
         ActualizarListaReservas();
         if (verificarPermiso.Ejecutar(sesion.UsuarioId!.Value, Permiso.ReservaAlta))
             ActualizarListaSolicitudes(); 
@@ -158,7 +170,7 @@ else
 
     void ActualizarListaReservas()
     {
-        reservas = reservasAprobadas.Ejecutar(EventoId, idSesion!.Value);
+        reservas = reservasAprobadas.Ejecutar(EventoId, idSesion);
         if (reservas.Count == 0)
         {
             msj = "No hay reservas aprobadas para este evento.";
@@ -168,7 +180,7 @@ else
             msj = "";
             foreach (var reserva in reservas)
             {
-                var usuario = obtenerUsuario.Ejecutar(reserva.UsuarioId, idSesion!.Value);
+                var usuario = obtenerUsuario.Ejecutar(reserva.UsuarioId, idSesion);
                 if (usuario != null)
                     _listaReservado.Add(usuario);
 
@@ -178,7 +190,7 @@ else
 
     void ActualizarListaSolicitudes()
     {
-        _listaSolicitudes = solicitudesReserva.Ejecutar(EventoId, idSesion!.Value);
+        _listaSolicitudes = solicitudesReserva.Ejecutar(EventoId, idSesion);
         if (_listaSolicitudes.Count == 0)
         {
             mensaje = "No hay solicitudes de reserva pendientes.";
@@ -195,7 +207,7 @@ else
     {
         try
         {
-            reservaAlta.Ejecutar(reservaId, idSesion!.Value);
+            reservaAlta.Ejecutar(reservaId, idSesion);
             mensaje = "Reserva aceptada.";
             claseMensaje = "alert alert-success";
             ActualizarListaReservas();
@@ -221,7 +233,7 @@ else
             if (_reserva != null)
             {
                 int reservaId = _reserva.Id;
-                rechazarReserva.Ejecutar(reservaId, idSesion!.Value);
+                rechazarReserva.Ejecutar(reservaId, idSesion);
                 mensaje = "Reserva rechazada.";
                 claseMensaje = "alert alert-success";
                 ActualizarListaSolicitudes();
@@ -235,6 +247,22 @@ else
             ActualizarListaReservas();
         }
         
+    }
+
+    void Editar(){
+        try{
+            dialogoEditar.Mostrar(EventoId);
+        }catch (Exception ex)
+        {
+            mensaje = $"Error al editar el evento: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void Refrescar()
+    {
+        responsable = obtenerUsuario.Ejecutar(evento.ResponsableId, idSesion);
+        StateHasChanged();
     }
 
 }
