@@ -23,6 +23,8 @@ public interface IUsuarioRepositorio
 
     bool ExisteEmail(string? email);
 
-     List<Usuario>? ObtenerSolicitudesPendientes();
+    List<Usuario>? ObtenerSolicitudesPendientes();
+     
+    List<Usuario>? ObtenerSolicitudesRechazadas();
 
 }

@@ -37,6 +37,7 @@ builder.Services.AddScoped<AceptarUsuarioUseCase>();
 builder.Services.AddScoped<RechazarUsuarioUseCase>();
 builder.Services.AddScoped<EliminarUsuarioUseCase>();
 builder.Services.AddScoped<ObtenerUsuarioUseCase>();
+builder.Services.AddScoped<SolicitudesUsuariosRechazadasUseCase>();
 
 //casos de uso permisos
 builder.Services.AddScoped<OtorgarPermisoUseCase>();

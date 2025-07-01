@@ -4,20 +4,25 @@
 @inject ListarSolicitudesUsuarioPendientesUseCase listarUsuarios
 @inject AceptarUsuarioUseCase aceptarUsuario
 @inject RechazarUsuarioUseCase rechazarUsuario
+@inject EliminarUsuarioUseCase eliminarSolicitud
+@inject SolicitudesUsuariosRechazadasUseCase listaRechazadas
 
 <DialogoConfirmacion @ref="dialogo" OnConfirmado="Rechazar"/>
+<DialogoConfirmacion @ref="dialogoEliminar" OnConfirmado="Eliminar"/>
 
-@if (sesion.UsuarioId is null)
+@if (sesion.UsuarioId == null)
 {
     <p>No estás logueado.</p>
 }
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="@claseMensaje">@mensaje</div>
+}
+
 <div class="contenedor">
-
-    @if (!string.IsNullOrEmpty(mensaje))
-    {
-        <div class="@claseMensaje">@mensaje</div>
-    }
-
+    <h2>Solicitudes Pendientes</h2>
+    <br>
     <table class="table">
         <thead>
             <tr>
@@ -45,30 +50,74 @@
             }
         </tbody>
     </table>
+
+    <br>
+    <hr>
+    <br>
+    <h2>Solicitudes Rechazadas</h2>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>ACCIÓN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in _rechazadas)
+            {
+                <tr>
+                    <td>@user.Nombre</td>
+                    <td>@user.Apellido</td>
+                    <td>@user.DNI</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
+                        <button class="btn btn-danger"@onclick="()=>EliminarUsuario(user)">Eliminar</button>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+
+
 </div>
 
 @code {
     private List<Usuario> _lista = new List<Usuario>();
-    private int? idSesion;
-     DialogoConfirmacion dialogo = null!;
+    private List<Usuario> _rechazadas = new List<Usuario>();  
+    private int idSesion;
+    DialogoConfirmacion dialogo = null!;
+    DialogoConfirmacion dialogoEliminar = null!;
     Usuario _usuario = null!;
     private string mensaje = "";
     private string claseMensaje = "";
 
     protected override void OnInitialized()
     {
-        idSesion = sesion.UsuarioId;
-        ActualizarLista();
+        try
+        {
+            idSesion = sesion.UsuarioId.Value;
+            ActualizarLista();
+            ListarUsuarioRechazados();
+        }        
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar la pagina: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
     }
 
     void ActualizarLista()
     {
         try
         {
-            if (idSesion is null)
-                throw new Exception("Sesión no iniciada.");
-
-            _lista = listarUsuarios.Ejecutar(idSesion.Value)?.ToList() ?? new List<Usuario>();
+            _lista = listarUsuarios.Ejecutar(idSesion)?.ToList();
         }
         catch (Exception ex)
         {
@@ -81,10 +130,7 @@
     {
         try
         {
-            if (idSesion is null)
-                throw new Exception("Sesión no iniciada.");
-
-            aceptarUsuario.Ejecutar(userId, idSesion.Value);
+            aceptarUsuario.Ejecutar(userId, idSesion);
 
             mensaje = "Usuario aceptado correctamente.";
             claseMensaje = "alert alert-success";
@@ -100,22 +146,20 @@
      private void RechazarUsuario(Usuario u)
     {
         _usuario = u;
-        dialogo.Mostrar($"¿Desea rechazar la reserva?");
+        dialogo.Mostrar($"¿Desea rechazar la solicitud de {u.Nombre} {u.Apellido}");
     }
 
     void Rechazar()
     {
         try
         {
-            if (idSesion is null)
-                throw new Exception("Sesión no iniciada.");
-
             if (_usuario != null){
                 int userId = _usuario.Id;     
-                rechazarUsuario.Ejecutar(userId, idSesion.Value);
+                rechazarUsuario.Ejecutar(userId, idSesion);
                 mensaje = "Usuario rechazado correctamente.";
                 claseMensaje = "alert alert-warning";
                 ActualizarLista();
+                ListarUsuarioRechazados();
             }
         }
         catch (Exception ex)
@@ -124,4 +168,42 @@
             claseMensaje = "alert alert-danger";
         }
     }
+
+    void ListarUsuarioRechazados(){
+        try
+        {
+            _rechazadas = listaRechazadas.Ejecutar(idSesion)?.ToList();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar la lista de rechazados: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
+    void EliminarUsuario(Usuario u)
+    {
+        _usuario = u;
+        dialogoEliminar.Mostrar($"¿Desea Eliminar a {u.Nombre} {u.Apellido} del sistema");
+    }
+    
+    void Eliminar()
+     {
+        try
+        {
+            if (_usuario != null){
+                int userId = _usuario.Id;     
+                eliminarSolicitud.Ejecutar(userId, idSesion);
+                mensaje = "Usuario eliminado correctamente.";
+                claseMensaje = "alert alert-warning";
+                ListarUsuarioRechazados();
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
+
 }

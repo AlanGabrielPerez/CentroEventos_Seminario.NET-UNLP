@@ -34,4 +34,7 @@ public class RepositorioUsuario(CentroEventoContext context) : RepositorioDbCont
         .Where(u => u.EstadoSolicitud == EstadoSolicitud.Pendiente)
         .ToList();
     
+    public List<Usuario>? ObtenerSolicitudesRechazadas() => _context.Usuarios
+        .Where(u => u.EstadoSolicitud == EstadoSolicitud.Rechazada)
+        .ToList();
 }
