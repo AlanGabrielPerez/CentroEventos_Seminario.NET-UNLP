@@ -60,7 +60,7 @@
 @code{
     private bool visible = false;
     private EventoDeportivo? evento;
-    private List<Usuario> usuarios = new();
+    private List<Usuario> usuarios = new List<Usuario>();
 
 
     [Parameter] public EventCallback OnConfirmado { get; set; }
@@ -73,11 +73,23 @@
     
     public void Mostrar(int idEvento)
     {
-        evento = ObtenerEvento.Ejecutar(idEvento, sesion.UsuarioId!.Value);
-        usuarios = listarUsuarios.Ejecutar(sesion.UsuarioId!.Value);
-        visible = true;
-        StateHasChanged();
+        if (sesion.UsuarioId!=null)
+        {
+            var idSesion = sesion.UsuarioId.Value;
+            var _eventoObtenido = ObtenerEvento.Ejecutar(idEvento, idSesion);
+            var _lista = listarUsuarios.Ejecutar(idSesion); 
+            if(_eventoObtenido != null)
+            {
+                evento = _eventoObtenido;
+            }
+            if(_lista!= null){
+                usuarios = _lista;
+            }
+            visible = true;
+            StateHasChanged();
+        }
     }
+    
 
     void Cerrar()
     {

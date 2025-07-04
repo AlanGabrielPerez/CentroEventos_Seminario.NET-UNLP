@@ -101,8 +101,10 @@ else
     void ActualizarlistaUsuarios()
     {
         try
-        {
-            usuarios = listarUsuarios.Ejecutar(idSesion);
+        {   
+            var _lista = listarUsuarios.Ejecutar(idSesion);
+            if(_lista!=null)
+                usuarios = _lista;
         }
         catch (Exception ex)
         {
@@ -114,7 +116,7 @@ else
     void SeleccionarUsuario()
     {
         _usuario = usuarios.FirstOrDefault(u => u.Id == idUsuarioSeleccionado);
-        permisoSeleccionado = default; // reset
+        permisoSeleccionado = default;
     }
 
     void HabilitarPermiso()

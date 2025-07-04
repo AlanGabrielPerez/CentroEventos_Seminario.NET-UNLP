@@ -21,17 +21,6 @@ public class EliminarPermisoUseCase(IUsuarioRepositorio usuarioRepo,
         {
             var idPermisoUsuario = _auth.ObtenerIdPorUsuarioYPermiso(idUsuario, permiso);
             _auth.EliminarPermisoUsuario(idPermisoUsuario);
-           
-            var permisoUsuario = _auth.ObtenerPermisoPorId(idPermisoUsuario);
-            if (permisoUsuario == null)
-                throw new EntidadNotFoundException($"No se encontró el permiso con ID: {idPermisoUsuario}");
-            
-            var usuario = _UsuarioRepo.ObtenerPorId(permisoUsuario.UsuarioId);
-            if (usuario != null)
-            {
-                usuario.Permisos.Remove(permisoUsuario);
-                _UsuarioRepo.Actualizar(usuario);
-            }
         }
     }
 }

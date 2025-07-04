@@ -4,17 +4,13 @@
 @inject ListarEventosConCupoDisponibleUseCase eventosDisponibles
 @inject CrearReservaUseCase solicitarReserva
 
-@if (sesion.UsuarioId == null)
-{
-    <p>No estás logueado.</p>
-}
 
 <div class="contenedor">
 
     @if (!string.IsNullOrEmpty(mensaje))
     {
         <div class="@claseMensaje">@mensaje</div>
-    }
+    }else{
 
     <table class="table">
         <thead>
@@ -46,30 +42,39 @@
             }
         </tbody>
     </table>
+    }
 </div> 
 
 
 @code {
     private List<EventoDeportivo> _lista = new List<EventoDeportivo>();
-    private int? idSesion;
+    private int idSesion;
 
     private string mensaje = "";
     private string claseMensaje = "";
 
     protected override void OnInitialized()
     {
-        idSesion = sesion.UsuarioId;
-        ActualizarLista();
+        try
+        {
+            if(sesion.UsuarioId != null)
+            {
+                var id = sesion.UsuarioId.Value;
+                idSesion = id;
+                ActualizarLista();
+            }
+        }catch (Exception ex)
+        {
+            mensaje = $"Error al cargar la pagina: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
     }
 
     void ActualizarLista()
     {
         try
         {
-            if (idSesion is null)
-                throw new Exception("Sesión no iniciada.");
-
-            _lista = eventosDisponibles.Ejecutar(idSesion.Value).ToList();
+            _lista = eventosDisponibles.Ejecutar(idSesion).ToList();
         }
         catch (Exception ex)
         {
@@ -84,7 +89,7 @@
             var reserva = new Reserva
             {
                 EventoDeportivoId = idEvento,
-                UsuarioId = idSesion!.Value
+                UsuarioId = idSesion
             };
 
             solicitarReserva.Ejecutar(reserva);

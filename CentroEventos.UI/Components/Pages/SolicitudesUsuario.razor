@@ -10,82 +10,75 @@
 <DialogoConfirmacion @ref="dialogo" OnConfirmado="Rechazar"/>
 <DialogoConfirmacion @ref="dialogoEliminar" OnConfirmado="Eliminar"/>
 
-@if (sesion.UsuarioId == null)
-{
-    <p>No estás logueado.</p>
-}
-
-@if (!string.IsNullOrEmpty(mensaje))
-{
-    <div class="@claseMensaje">@mensaje</div>
-}
-
 <div class="contenedor">
-    <h2>Solicitudes Pendientes</h2>
-    <br>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>DNI</th>
-                <th>Email</th>
-                <th>ACCIÓN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in _lista)
-            {
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="@claseMensaje">@mensaje</div>
+    }else
+    {
+        <h2>Solicitudes Pendientes</h2>
+        <br>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@user.Nombre</td>
-                    <td>@user.Apellido</td>
-                    <td>@user.DNI</td>
-                    <td>@user.Email</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
-                        <button class="btn btn-danger"@onclick="()=>RechazarUsuario(user)">Rechazar</button>
-                    </td>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Email</th>
+                    <th>ACCIÓN</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in _lista)
+                {
+                    <tr>
+                        <td>@user.Nombre</td>
+                        <td>@user.Apellido</td>
+                        <td>@user.DNI</td>
+                        <td>@user.Email</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
+                            <button class="btn btn-danger"@onclick="()=>RechazarUsuario(user)">Rechazar</button>
+                        </td>
+                    </tr>
 
-            }
-        </tbody>
-    </table>
+                }
+            </tbody>
+        </table>
 
-    <br>
-    <hr>
-    <br>
-    <h2>Solicitudes Rechazadas</h2>
-    <br>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>DNI</th>
-                <th>Email</th>
-                <th>ACCIÓN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in _rechazadas)
-            {
+        <br>
+        <hr>
+        <br>
+        <h2>Solicitudes Rechazadas</h2>
+        <br>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@user.Nombre</td>
-                    <td>@user.Apellido</td>
-                    <td>@user.DNI</td>
-                    <td>@user.Email</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
-                        <button class="btn btn-danger"@onclick="()=>EliminarUsuario(user)">Eliminar</button>
-                    </td>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Email</th>
+                    <th>ACCIÓN</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in _rechazadas)
+                {
+                    <tr>
+                        <td>@user.Nombre</td>
+                        <td>@user.Apellido</td>
+                        <td>@user.DNI</td>
+                        <td>@user.Email</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>Aceptar(user.Id)">Aceptar</button>
+                            <button class="btn btn-danger"@onclick="()=>EliminarUsuario(user)">Eliminar</button>
+                        </td>
+                    </tr>
 
-            }
-        </tbody>
-    </table>
-
-
-
+                }
+            </tbody>
+        </table>
+    }
 </div>
 
 @code {
@@ -102,9 +95,13 @@
     {
         try
         {
-            idSesion = sesion.UsuarioId.Value;
-            ActualizarLista();
-            ListarUsuarioRechazados();
+            if(sesion.UsuarioId!=null)
+            {
+                var id = sesion.UsuarioId.Value;
+                idSesion = id;
+                ActualizarLista();
+                ListarUsuarioRechazados();
+            }
         }        
         catch (Exception ex)
         {
@@ -116,8 +113,12 @@
     void ActualizarLista()
     {
         try
-        {
-            _lista = listarUsuarios.Ejecutar(idSesion)?.ToList();
+        {   
+            var _listaObtenida = listarUsuarios.Ejecutar(idSesion);
+            if (_listaObtenida!= null)
+            {
+                _lista = _listaObtenida;
+            }
         }
         catch (Exception ex)
         {
@@ -172,7 +173,11 @@
     void ListarUsuarioRechazados(){
         try
         {
-            _rechazadas = listaRechazadas.Ejecutar(idSesion)?.ToList();
+            var _listaObtenida = listaRechazadas.Ejecutar(idSesion);
+            if(_listaObtenida != null)
+            {
+                _rechazadas = _listaObtenida;
+            }
         }
         catch (Exception ex)
         {

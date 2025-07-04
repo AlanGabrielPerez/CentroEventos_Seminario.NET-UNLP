@@ -12,17 +12,12 @@
 
 <DialogoConfirmacion @ref="dialogo" OnConfirmado="Eliminar"/>
 
-@if (sesion.UsuarioId == null)
-{
-    <p>No estás logueado.</p>
-}
-
 <div class="contenedor">
 
     @if (!string.IsNullOrEmpty(mensaje))
     {
         <div class="@claseMensaje">@mensaje</div>
-    }
+    }else{
 
     <table class="table">
         <thead>
@@ -51,7 +46,7 @@
             }
         </tbody>
     </table>
-
+    }
 </div>
 
 
@@ -69,14 +64,16 @@
 
     protected override void OnInitialized()
     {
-        if (sesion.UsuarioId != null)
+        try
         {
-            idSesion = sesion.UsuarioId.Value;
-            ActualizarListaUsuarios();
-        }
-        else
+            if (sesion.UsuarioId != null)
+            {
+                idSesion = sesion.UsuarioId.Value;
+                ActualizarListaUsuarios();
+            }
+        }catch (Exception ex)
         {
-            mensaje = "No estás logueado.";
+            mensaje = $"No estás logueado:  {ex.Message}";
             claseMensaje = "alert alert-danger";
         }
     }

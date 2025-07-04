@@ -5,17 +5,12 @@
 @inject CrearEventoDeportivoUseCase crearEvento
 
 
-@if (sesion.UsuarioId is null)
-{
-    <p>No estás logueado.</p>
-}
-
 <div class="contenedor">
 
     @if (!string.IsNullOrEmpty(mensaje))
     {
         <div class="@claseMensaje">@mensaje</div>
-    }
+    }else{
 
     <div class="mb-3">
         <label>Nombre:</label>
@@ -58,6 +53,7 @@
     <div class="d-flex justify-content-center mb-3">
         <button class="btn btn-primary" @onclick="Crear">Registrar evento</button>
     </div>
+    }
 </div>
 
 @code {
@@ -97,8 +93,17 @@
     }
     protected override void OnInitialized()
     {
-        idSesion = sesion.UsuarioId.Value!;
-
-        usuarios = listarUsuarios.Ejecutar(idSesion)!.ToList();
+        try{
+            if (sesion.UsuarioId != null)
+            {
+                idSesion = sesion.UsuarioId.Value;
+                usuarios = listarUsuarios.Ejecutar(idSesion)!.ToList();
+            }
+        }catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseMensaje = "alert alert-danger";
+        }
+    }
     }
 }

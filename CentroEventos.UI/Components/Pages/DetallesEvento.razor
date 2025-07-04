@@ -44,8 +44,11 @@
             <dd class="col-sm-9">@evento.CupoMaximo</dd>
 
             <dt class="col-sm-3">Responsable:</dt>
-            <dd class="col-sm-9">@responsable.Nombre @responsable.Apellido</dd>
-
+            @if(responsable != null){
+                <dd class="col-sm-9">@responsable.Nombre @responsable.Apellido </dd>
+            }else{
+                <dd class="col-sm-9">Error al cargar al responsable</dd>
+            }
             <dt class="col-sm-3">Descripción:</dt>
             <dd class="col-sm-9">@evento.Descripcion</dd>
         </dl>
@@ -260,8 +263,10 @@
     }
 
     void Refrescar()
-    {
-        responsable = obtenerUsuario.Ejecutar(evento.ResponsableId, idSesion);
+    {   
+        if(evento!=null){
+            responsable = obtenerUsuario.Ejecutar(evento.ResponsableId, idSesion);
+        }    
         StateHasChanged();
     }
 
